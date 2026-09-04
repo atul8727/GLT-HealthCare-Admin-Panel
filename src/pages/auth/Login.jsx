@@ -8,7 +8,7 @@ import Input from "../../components/ui/Input";
 export default function Login() {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "admin@glthealthcare.com", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,11 +19,11 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      await login(form);
+      await login({ ...form, role: "admin" });
       toast.success("Welcome back!");
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Login failed");
+      setError(err.message || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -64,11 +64,6 @@ export default function Login() {
             Sign In
           </Button>
         </form>
-
-        <p className="mt-4 text-center text-xs text-text-muted">
-          Demo mode — any password works. Use an email containing "doctor" to preview the
-          DOCTOR role.
-        </p>
       </div>
     </div>
   );

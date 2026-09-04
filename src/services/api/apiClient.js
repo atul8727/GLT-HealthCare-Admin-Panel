@@ -1,56 +1,70 @@
 /**
- * apiClient.js — FUTURE REST API CLIENT (not active yet)
- * ----------------------------------------------------------------------------
- * The app currently runs on `services/storage/localStorageClient.js`.
- * When the backend is ready:
- *
- *   1. Set VITE_API_BASE_URL in your .env file.
- *   2. Finish the methods below (they mirror localStorageClient's shape:
- *      getAll, getById, create, update, remove) using fetch + endpoints.js.
- *   3. In each `services/<feature>/<feature>Service.js`, change the import
- *      from `localStorageClient` to `apiClient`. Nothing in pages/components
- *      needs to change since they only ever call the *Service functions.
- *
- * This keeps the migration a one-line-per-service change.
- * ----------------------------------------------------------------------------
+ * apiClient.js — production REST client.
+ * Base URL comes from src/config/env.js (VITE_API_BASE_URL, .env file).
+ * Every *Service.js file that has a real backend endpoint should call this
+ * client instead of localStorageClient. See authService.js for the pattern.
  */
 import { API_BASE_URL } from "../../config/env";
 
+const TOKEN_KEY = "glt_auth_token";
+
 function getToken() {
-  return localStorage.getItem("glt_auth_token");
+  return localStorage.getItem(TOKEN_KEY);
 }
 
 async function request(path, { method = "GET", body, headers = {} } = {}) {
   const token = getToken();
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-
-  if (!response.ok) {
-    const errorBody = await response.json().catch(() => ({}));
-    throw new Error(errorBody.message || `Request failed: ${response.status}`);
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch (networkErr) {
+    throw new Error("Network error — unable to reach the server. Please check your connection.");
   }
 
-  if (response.status === 204) return null;
-  return response.json();
+  let payload = null;
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    const message = payload?.message || `Request failed (${response.status})`;
+    const error = new Error(message);
+    error.status = response.status;
+    error.payload = payload;
+    throw error;
+  }
+
+  return payload;
 }
 
 const apiClient = {
-  getAll: (collectionPath) => request(`/${collectionPath}`),
-  getById: (collectionPath, id) => request(`/${collectionPath}/${id}`),
-  create: (collectionPath, payload) =>
-    request(`/${collectionPath}`, { method: "POST", body: payload }),
-  update: (collectionPath, id, payload) =>
-    request(`/${collectionPath}/${id}`, { method: "PUT", body: payload }),
-  remove: (collectionPath, id) =>
-    request(`/${collectionPath}/${id}`, { method: "DELETE" }),
+  get: (path) => request(path),
+  post: (path, body) => request(path, { method: "POST", body }),
+  put: (path, body) => request(path, { method: "PUT", body }),
+  patch: (path, body) => request(path, { method: "PATCH", body }),
+  delete: (path) => request(path, { method: "DELETE" }),
+
+  // Generic resource helpers for future CRUD modules (patients, doctors, etc.)
+  // once their endpoints are shared — keeps the same shape as localStorageClient
+  // so migrating a *Service.js file later is a near copy-paste swap.
+  getAll: (resourcePath) => request(`/${resourcePath}`),
+  getById: (resourcePath, id) => request(`/${resourcePath}/${id}`),
+  create: (resourcePath, payload) => request(`/${resourcePath}`, { method: "POST", body: payload }),
+  update: (resourcePath, id, payload) =>
+    request(`/${resourcePath}/${id}`, { method: "PUT", body: payload }),
+  remove: (resourcePath, id) => request(`/${resourcePath}/${id}`, { method: "DELETE" }),
 };
 
 export default apiClient;

@@ -1,9 +1,22 @@
 /**
  * env.js — centralized environment/config access.
- *
- * Currently the app runs entirely on localStorage (see services/storage),
- * so VITE_API_BASE_URL is not used yet. It's wired up now so that switching
- * to the real backend later is just: fill in .env + build apiClient.js.
+ * Never hardcode the API base URL anywhere else in the app — always import
+ * API_BASE_URL from here.
  */
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
-export const USE_LOCAL_STORAGE = true; // flip to false once apiClient.js is ready
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://glt.fctesting.shop";
+
+/**
+ * Per-feature switch so we can migrate module by module from localStorage
+ * to the real API as endpoints become available, without breaking modules
+ * that aren't wired up yet.
+ * Flip a feature to false once its *Service.js file is switched to apiClient.
+ */
+export const USE_LOCAL_STORAGE = {
+  auth: false, // ✅ real API (/api/auth/login)
+  patients: false, // ✅ real API (/api/patients)
+  doctors: true,
+  appointments: true,
+  prescriptions: true,
+  users: true,
+  settings: true,
+};

@@ -49,12 +49,28 @@ const NAV_GROUPS = [
 export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
   const content = (
     <div className="flex h-full flex-col bg-navy text-slate-300">
-      <div className="flex h-16 shrink-0 items-center gap-2 px-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white">
-          G
-        </div>
-        {!collapsed && (
-          <span className="text-sm font-semibold tracking-wide text-white">GLT Healthcare</span>
+      {/* Logo Section - Improved with better text logo */}
+      <div className="flex h-20 shrink-0 items-center justify-center px-4 border-b border-white/5">
+        {!collapsed ? (
+          // Expanded view - Show full logo with image
+          <div className="flex items-center justify-center w-full">
+            <img
+              src="/GLT_logo.jpeg"
+              alt="GLT Healthcare"
+              className="h-14 w-auto object-contain max-w-[180px]"
+            />
+          </div>
+        ) : (
+          // Collapsed view - Show only "GLT" text logo
+          <div className="flex items-center justify-center w-full">
+            <div className="relative">
+              <span className="text-2xl font-bold tracking-tight text-white">
+                GLT
+              </span>
+              {/* Optional: Small decorative dot */}
+              {/* <span className="absolute -top-1 -right-2 h-1.5 w-1.5 rounded-full bg-primary"></span> */}
+            </div>
+          </div>
         )}
       </div>
 
@@ -75,14 +91,14 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
                   onClick={onCloseMobile}
                   className={({ isActive }) =>
                     classNames(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                       isActive
                         ? "bg-primary text-white"
                         : "text-slate-300 hover:bg-white/5 hover:text-white"
                     )
                   }
                 >
-                  <item.icon className="h-4.5 w-4.5 shrink-0" />
+                  <item.icon className="h-5 w-5 shrink-0" />
                   {!collapsed && <span>{item.label}</span>}
                 </NavLink>
               ))}
@@ -90,6 +106,21 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
           </div>
         ))}
       </nav>
+
+      {/* Footer with user info - Only show when expanded */}
+      {!collapsed && (
+        <div className="border-t border-white/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+              <span className="text-xs font-medium text-white">A</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white truncate">Admin User</p>
+              <p className="text-xs text-slate-400 truncate">admin@glt.com</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -97,8 +128,8 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
     <>
       {/* Desktop / tablet sidebar */}
       <motion.aside
-        animate={{ width: collapsed ? 76 : 260 }}
-        transition={{ duration: 0.2, ease: "easeInOut" }}
+        animate={{ width: collapsed ? 80 : 280 }}
+        transition={{ duration: 0.25, ease: "easeInOut" }}
         className="hidden shrink-0 md:block"
       >
         {content}
@@ -109,11 +140,11 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
         <div className="fixed inset-0 z-40 md:hidden">
           <div className="absolute inset-0 bg-navy/50" onClick={onCloseMobile} />
           <motion.div
-            initial={{ x: -260 }}
+            initial={{ x: -280 }}
             animate={{ x: 0 }}
-            exit={{ x: -260 }}
-            transition={{ duration: 0.2 }}
-            className="absolute inset-y-0 left-0 w-64"
+            exit={{ x: -280 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-y-0 left-0 w-[280px]"
           >
             {content}
           </motion.div>

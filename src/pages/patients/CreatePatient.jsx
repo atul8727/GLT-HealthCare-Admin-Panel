@@ -8,8 +8,8 @@ export default function CreatePatient() {
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
-    const patient = await patientService.createPatient({ ...values, status: "Active" });
-    toast.success(`Patient created — ${patient.id}`);
+    const patient = await patientService.createPatient(values);
+    toast.success(`Patient created — #${patient.id}`);
     navigate(`/patients/${patient.id}`);
   };
 
