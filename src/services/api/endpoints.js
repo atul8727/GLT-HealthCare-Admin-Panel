@@ -18,6 +18,24 @@ export const ENDPOINTS = {
     DELETE: (id) => `/api/patients/${id}`,
   },
 
+  DOCTORS: {
+    LIST: "/api/doctors",
+    CREATE: "/api/doctors",
+    DETAIL: (id) => `/api/doctors/${id}`,
+    UPDATE: (id) => `/api/doctors/${id}`,
+    DELETE: (id) => `/api/doctors/${id}`,
+    UPDATE_PASSWORD: (id) => `/api/doctors/${id}/password`,
+    UPDATE_STATUS: (id) => `/api/doctors/${id}/status`,
+  },
+
+CONSULTATIONS: {
+    LIST: "/api/consultations",
+    CREATE: "/api/consultations",
+    DETAIL: (id) => `/api/consultations/${id}`,
+    RESCHEDULE: (id) => `/api/consultations/${id}/schedule`,
+    CANCEL: (id) => `/api/consultations/${id}/cancel`,
+  },
+
 VITALS: {
     CREATE: "/api/vitals/",
     BY_PATIENT: (patientId) => `/api/vitals/patient/${patientId}`,
@@ -27,4 +45,3 @@ VITALS: {
   },
 
 };
-
