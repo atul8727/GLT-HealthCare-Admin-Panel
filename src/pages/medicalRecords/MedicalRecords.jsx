@@ -33,7 +33,7 @@ export default function MedicalRecords() {
         loading={loading}
         emptyTitle="No patient records yet"
         columns={[
-          { key: "id", header: "Patient ID" },
+          // { key: "id", header: "Patient ID" },
           { key: "name", header: "Name" },
           { key: "mobile", header: "Mobile" },
           {

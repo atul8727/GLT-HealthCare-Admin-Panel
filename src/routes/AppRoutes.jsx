@@ -12,9 +12,12 @@ import EditPatient from "../pages/patients/EditPatient";
 
 import Doctors from "../pages/doctors/Doctors";
 import CreateDoctor from "../pages/doctors/CreateDoctor";
+import EditDoctor from "../pages/doctors/EditDoctor";
 
 import Appointments from "../pages/appointments/Appointments";
 import Consultations from "../pages/consultations/Consultations";
+import CreateConsultation from "../pages/consultations/CreateConsultation";
+import ConsultationDetails from "../pages/consultations/ConsultationDetails";
 import MedicalRecords from "../pages/medicalRecords/MedicalRecords";
 import Prescriptions from "../pages/prescriptions/Prescriptions";
 import Users from "../pages/users/Users";
@@ -38,9 +41,12 @@ export default function AppRoutes() {
 
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/doctors/create" element={<CreateDoctor />} />
+          <Route path="/doctors/:id/edit" element={<EditDoctor />} />
 
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/consultations" element={<Consultations />} />
+          <Route path="/consultations/create" element={<CreateConsultation />} />
+          <Route path="/consultations/:id" element={<ConsultationDetails />} />
           <Route path="/medical-records" element={<MedicalRecords />} />
           <Route path="/prescriptions" element={<Prescriptions />} />
           <Route path="/users" element={<Users />} />

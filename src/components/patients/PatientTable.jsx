@@ -12,7 +12,7 @@ export default function PatientTable({ patients, loading, onDelete }) {
       emptyTitle="No patients found"
       emptyDescription="Register your first patient to get started."
       columns={[
-        { key: "id", header: "Patient ID" },
+        // { key: "id", header: "Patient ID" },
         { key: "name", header: "Name" },
         { key: "mobile", header: "Mobile" },
         { key: "age", header: "Age", render: (row) => calculateAge(row.dob) },

@@ -6,13 +6,10 @@ import { Card, Input, Button } from "../../components/ui";
 
 const EMPTY = {
   name: "",
-  specialization: "",
-  qualification: "",
-  mobile: "",
   email: "",
-  registrationNumber: "",
-  experience: "",
-  consultationFee: "",
+  password: "",
+  mobile: "",
+  specialization: "",
 };
 
 export default function CreateDoctor() {
@@ -26,9 +23,11 @@ export default function CreateDoctor() {
     e.preventDefault();
     setSaving(true);
     try {
-      const doctor = await doctorService.createDoctor({ ...form, status: "Active" });
-      toast.success(`Doctor added — ${doctor.id}`);
+      const doctor = await doctorService.createDoctor(form);
+      toast.success(`Doctor added — ${doctor.name}`);
       navigate("/doctors");
+    } catch (err) {
+      toast.error(err.message || "Failed to create doctor.");
     } finally {
       setSaving(false);
     }
@@ -47,22 +46,20 @@ export default function CreateDoctor() {
               onChange={handleChange("specialization")}
             />
             <Input
-              label="Qualification"
-              value={form.qualification}
-              onChange={handleChange("qualification")}
+              label="Email"
+              type="email"
+              required
+              value={form.email}
+              onChange={handleChange("email")}
             />
             <Input label="Mobile" required value={form.mobile} onChange={handleChange("mobile")} />
-            <Input label="Email" type="email" value={form.email} onChange={handleChange("email")} />
             <Input
-              label="Registration Number"
-              value={form.registrationNumber}
-              onChange={handleChange("registrationNumber")}
-            />
-            <Input label="Experience" value={form.experience} onChange={handleChange("experience")} />
-            <Input
-              label="Consultation Fee"
-              value={form.consultationFee}
-              onChange={handleChange("consultationFee")}
+              label="Password"
+              type="password"
+              required
+              minLength={6}
+              value={form.password}
+              onChange={handleChange("password")}
             />
           </div>
           <div className="flex justify-end pt-2">

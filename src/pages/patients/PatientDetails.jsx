@@ -72,7 +72,8 @@ export default function PatientDetails() {
           <div>
             <h2 className="text-lg font-semibold text-text-primary">{patient.name}</h2>
             <p className="text-sm text-text-secondary">
-              #{patient.id} · {patient.mobile}
+              {/* #{patient.id} · */}
+               {patient.mobile}
             </p>
           </div>
           <StatusBadge status={patient.status || "Active"} />

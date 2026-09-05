@@ -13,3 +13,4 @@ export { default as EmptyState } from "./EmptyState";
 export { default as Loader } from "./Loader";
 export { default as Skeleton, TableSkeleton } from "./Skeleton";
 export { default as Tabs } from "./Tabs";
+export { default as ToggleSwitch } from "./ToggleSwitch";
