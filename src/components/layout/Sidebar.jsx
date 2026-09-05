@@ -26,7 +26,7 @@ const NAV_GROUPS = [
     label: "Clinic Management",
     items: [
       { to: "/doctors", label: "Doctors", icon: FiUserCheck },
-      { to: "/appointments", label: "Appointments", icon: FiCalendar },
+      // { to: "/appointments", label: "Appointments", icon: FiCalendar },
       { to: "/consultations", label: "Consultations", icon: FiVideo },
     ],
   },
@@ -37,13 +37,13 @@ const NAV_GROUPS = [
       { to: "/prescriptions", label: "Prescriptions", icon: FiFileText },
     ],
   },
-  {
-    label: "Administration",
-    items: [
-      { to: "/users", label: "Staff & Users", icon: FiUserPlus },
-      { to: "/settings", label: "Settings", icon: FiSettings },
-    ],
-  },
+  // {
+  //   label: "Administration",
+  //   items: [
+  //     { to: "/users", label: "Staff & Users", icon: FiUserPlus },
+  //     { to: "/settings", label: "Settings", icon: FiSettings },
+  //   ],
+  // },
 ];
 
 export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
