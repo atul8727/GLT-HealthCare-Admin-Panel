@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Input, Select, Button } from "../ui";
 import { GENDERS } from "../../utils/constants";
 
@@ -39,6 +40,8 @@ export default function PatientForm({ initialValues, onSubmit, submitLabel = "Cr
     setSaving(true);
     try {
       await onSubmit(form);
+    } catch (err) {
+      toast.error(err.message || "Something went wrong. Please try again.");
     } finally {
       setSaving(false);
     }

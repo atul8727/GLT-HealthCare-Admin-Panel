@@ -5,7 +5,8 @@ import { FiEdit2, FiArrowLeft } from "react-icons/fi";
 import patientService from "../../services/patients/patientService";
 import appointmentService from "../../services/appointments/appointmentService";
 import prescriptionService from "../../services/prescriptions/prescriptionService";
-import { Card, Tabs, Button, Input, DataTable, StatusBadge, Loader } from "../../components/ui";
+import { Card, Tabs, Button, DataTable, StatusBadge, Loader } from "../../components/ui";
+import VitalsPanel from "../../components/patients/VitalsPanel";
 import { calculateAge, formatDate } from "../../utils/helpers";
 
 const TABS = [
@@ -23,46 +24,29 @@ export default function PatientDetails() {
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
-  const [vitalsForm, setVitalsForm] = useState({
-    bp: "",
-    pulse: "",
-    temperature: "",
-    spo2: "",
-    weight: "",
-    height: "",
-  });
-  const [savingVitals, setSavingVitals] = useState(false);
 
   const load = async () => {
     setLoading(true);
-    const [patientData, allAppointments, allPrescriptions] = await Promise.all([
-      patientService.getPatientById(id),
-      appointmentService.getAppointments(),
-      prescriptionService.getPrescriptions(),
-    ]);
-    setPatient(patientData);
-    setAppointments(allAppointments.filter((a) => a.patientId === id));
-    setPrescriptions(allPrescriptions.filter((p) => p.patientId === id));
-    setLoading(false);
+    try {
+      const [patientData, allAppointments, allPrescriptions] = await Promise.all([
+        patientService.getPatientById(id),
+        appointmentService.getAppointments(),
+        prescriptionService.getPrescriptions(),
+      ]);
+      setPatient(patientData);
+      setAppointments(allAppointments.filter((a) => a.patientId === id));
+      setPrescriptions(allPrescriptions.filter((p) => p.patientId === id));
+    } catch (err) {
+      toast.error(err.message || "Failed to load patient.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-  const handleAddVitals = async (e) => {
-    e.preventDefault();
-    setSavingVitals(true);
-    try {
-      await patientService.addVitals(id, vitalsForm);
-      toast.success("Vitals saved");
-      setVitalsForm({ bp: "", pulse: "", temperature: "", spo2: "", weight: "", height: "" });
-      load();
-    } finally {
-      setSavingVitals(false);
-    }
-  };
 
   if (loading) return <Loader label="Loading patient profile..." />;
   if (!patient) return <p className="text-text-secondary">Patient not found.</p>;
@@ -88,7 +72,7 @@ export default function PatientDetails() {
           <div>
             <h2 className="text-lg font-semibold text-text-primary">{patient.name}</h2>
             <p className="text-sm text-text-secondary">
-              {patient.id} · {patient.mobile}
+              #{patient.id} · {patient.mobile}
             </p>
           </div>
           <StatusBadge status={patient.status || "Active"} />
@@ -112,6 +96,7 @@ export default function PatientDetails() {
                 ["Address", patient.address || "-"],
                 ["Emergency Contact", patient.emergencyContact || "-"],
                 ["Registered On", formatDate(patient.createdAt)],
+                ["Registered By", patient.registeredBy ?? "-"],
               ].map(([label, value]) => (
                 <div key={label}>
                   <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
@@ -123,62 +108,7 @@ export default function PatientDetails() {
             </dl>
           )}
 
-          {activeTab === "vitals" && (
-            <div className="space-y-6">
-              <form onSubmit={handleAddVitals} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                <Input
-                  label="Blood Pressure"
-                  placeholder="120/80"
-                  value={vitalsForm.bp}
-                  onChange={(e) => setVitalsForm({ ...vitalsForm, bp: e.target.value })}
-                />
-                <Input
-                  label="Pulse (bpm)"
-                  value={vitalsForm.pulse}
-                  onChange={(e) => setVitalsForm({ ...vitalsForm, pulse: e.target.value })}
-                />
-                <Input
-                  label="Temperature (°F)"
-                  value={vitalsForm.temperature}
-                  onChange={(e) => setVitalsForm({ ...vitalsForm, temperature: e.target.value })}
-                />
-                <Input
-                  label="SpO₂ (%)"
-                  value={vitalsForm.spo2}
-                  onChange={(e) => setVitalsForm({ ...vitalsForm, spo2: e.target.value })}
-                />
-                <Input
-                  label="Weight (kg)"
-                  value={vitalsForm.weight}
-                  onChange={(e) => setVitalsForm({ ...vitalsForm, weight: e.target.value })}
-                />
-                <Input
-                  label="Height (cm)"
-                  value={vitalsForm.height}
-                  onChange={(e) => setVitalsForm({ ...vitalsForm, height: e.target.value })}
-                />
-                <div className="col-span-2 sm:col-span-3">
-                  <Button type="submit" loading={savingVitals}>
-                    Save Vitals
-                  </Button>
-                </div>
-              </form>
-
-              <DataTable
-                emptyTitle="No vitals recorded yet"
-                columns={[
-                  { key: "recordedAt", header: "Date", render: (r) => formatDate(r.recordedAt) },
-                  { key: "bp", header: "BP" },
-                  { key: "pulse", header: "Pulse" },
-                  { key: "temperature", header: "Temp" },
-                  { key: "spo2", header: "SpO₂" },
-                  { key: "weight", header: "Weight" },
-                ]}
-                rows={(patient.vitalsHistory || []).slice().reverse()}
-                rowKey="recordedAt"
-              />
-            </div>
-          )}
+          {activeTab === "vitals" && <VitalsPanel patientId={id} />}
 
           {activeTab === "consultations" && (
             <DataTable

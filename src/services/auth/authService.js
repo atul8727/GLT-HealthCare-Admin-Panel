@@ -1,38 +1,39 @@
 /**
- * authService.js — MVP mock authentication (localStorage based).
+ * authService.js — REAL authentication against the GLT Healthcare backend.
+ * Endpoint: POST /api/auth/login  (base URL from src/config/env.js)
  *
- * Any email/password combination below is accepted for demo purposes:
- *   admin@glthealthcare.com / any password  -> role ADMIN
- *   doctor@glthealthcare.com / any password -> role DOCTOR
- *
- * When the real backend is ready, replace the body of `login` with a call
- * to apiClient (POST /auth/login) and keep the same return shape
- * ({ user, token }) so AuthContext doesn't need to change.
+ * Expected response shape:
+ * {
+ *   "success": true,
+ *   "message": "Login successful",
+ *   "data": {
+ *     "token": "...",
+ *     "user": { "admin_id": 1, "name": "GLT Admin", "email": "...", "role": "admin" }
+ *   }
+ * }
  */
+import apiClient from "../api/apiClient";
+import { ENDPOINTS } from "../api/endpoints";
 
 const TOKEN_KEY = "glt_auth_token";
 const USER_KEY = "glt_auth_user";
 
-function fakeToken() {
-  return `demo-token-${Date.now()}`;
-}
-
 export const authService = {
-  login: async ({ email, password }) => {
-    await new Promise((r) => setTimeout(r, 300));
+  /**
+   * @param {{ email: string, password: string, role?: string }} credentials
+   * role defaults to "admin" since only the Admin Panel exists today.
+   */
+  login: async ({ email, password, role = "admin" }) => {
+    const response = await apiClient.post(ENDPOINTS.AUTH.LOGIN, { email, password, role });
 
-    if (!email || !password) {
-      throw new Error("Email and password are required.");
+    if (!response?.success) {
+      throw new Error(response?.message || "Login failed. Please try again.");
     }
 
-    const role = email.toLowerCase().includes("doctor") ? "DOCTOR" : "ADMIN";
-    const user = {
-      id: role === "ADMIN" ? "GLT-U-000001" : "GLT-D-000010",
-      name: role === "ADMIN" ? "Admin User" : "Dr. Rahul Sharma",
-      email,
-      role,
-    };
-    const token = fakeToken();
+    const { token, user } = response.data || {};
+    if (!token || !user) {
+      throw new Error("Unexpected response from server.");
+    }
 
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -41,8 +42,15 @@ export const authService = {
   },
 
   logout: async () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    try {
+      await apiClient.post(ENDPOINTS.AUTH.LOGOUT);
+    } catch {
+      // Even if the logout call fails (endpoint down, network issue),
+      // always clear the local session so the user is signed out client-side.
+    } finally {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+    }
   },
 
   getCurrentUser: () => {
