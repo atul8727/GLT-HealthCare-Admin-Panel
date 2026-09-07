@@ -6,7 +6,7 @@ import { Button, Modal, ConfirmDialog, StatusBadge } from "../ui";
 import { formatDate } from "../../utils/helpers";
 import VitalForm from "./VitalForm";
 
-export default function VitalsPanel({ patientId }) {
+export default function VitalsPanel({ patientId, autoOpenCreate = false }) {
   const [vitals, setVitals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
@@ -32,6 +32,15 @@ export default function VitalsPanel({ patientId }) {
       loadVitals();
     }
   }, [patientId]);
+
+  // Right after registering a brand-new patient, jump straight into the
+  // Add Vitals form so recording the first vitals is a one-click next step.
+  useEffect(() => {
+    if (autoOpenCreate) {
+      setShowCreate(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoOpenCreate]);
 
   const handleCreate = async (form) => {
     try {
@@ -178,25 +187,22 @@ export default function VitalsPanel({ patientId }) {
                     <td className="px-4 py-2">
                       <div className="flex items-center justify-center gap-1">
                         <Button
-                          variant="ghost"
+                          variant="actionView"
                           size="sm"
                           icon={FiEye}
                           onClick={() => setViewing(vital)}
-                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                         />
                         <Button
-                          variant="ghost"
+                          variant="actionEdit"
                           size="sm"
                           icon={FiEdit2}
                           onClick={() => setEditing(vital)}
-                          className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                         />
                         <Button
-                          variant="ghost"
+                          variant="actionDelete"
                           size="sm"
                           icon={FiTrash2}
                           onClick={() => setToDelete(vital)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         />
                       </div>
                     </td>
@@ -318,14 +324,6 @@ export default function VitalsPanel({ patientId }) {
                 </dt>
                 <dd className="mt-1 text-sm font-medium text-text-primary">
                   {viewing.bmi ?? "-"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Recorded By
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {viewing.recordedBy ?? "-"}
                 </dd>
               </div>
             </div>

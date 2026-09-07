@@ -14,14 +14,13 @@ import Doctors from "../pages/doctors/Doctors";
 import CreateDoctor from "../pages/doctors/CreateDoctor";
 import EditDoctor from "../pages/doctors/EditDoctor";
 
-import Appointments from "../pages/appointments/Appointments";
 import Consultations from "../pages/consultations/Consultations";
 import CreateConsultation from "../pages/consultations/CreateConsultation";
 import ConsultationDetails from "../pages/consultations/ConsultationDetails";
 import MedicalRecords from "../pages/medicalRecords/MedicalRecords";
 import Prescriptions from "../pages/prescriptions/Prescriptions";
-import Users from "../pages/users/Users";
-import Settings from "../pages/settings/Settings";
+import PrescriptionDetails from "../pages/prescriptions/PrescriptionDetails";
+import Profile from "../pages/profile/Profile";
 import NotFound from "../pages/NotFound";
 
 export default function AppRoutes() {
@@ -43,14 +42,13 @@ export default function AppRoutes() {
           <Route path="/doctors/create" element={<CreateDoctor />} />
           <Route path="/doctors/:id/edit" element={<EditDoctor />} />
 
-          <Route path="/appointments" element={<Appointments />} />
           <Route path="/consultations" element={<Consultations />} />
           <Route path="/consultations/create" element={<CreateConsultation />} />
           <Route path="/consultations/:id" element={<ConsultationDetails />} />
           <Route path="/medical-records" element={<MedicalRecords />} />
           <Route path="/prescriptions" element={<Prescriptions />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/prescriptions/:id" element={<PrescriptionDetails />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
 

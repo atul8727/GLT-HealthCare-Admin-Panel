@@ -12,9 +12,10 @@ export default function Input({ label, error, className, required, id, ...props 
       <input
         id={inputId}
         className={classNames(
-          "w-full rounded-lg border px-3 py-2 text-sm text-text-primary placeholder:text-text-muted",
-          "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors",
-          error ? "border-danger" : "border-slate-300",
+          "w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted",
+          "transition-all duration-150 hover:border-slate-400",
+          "focus:outline-none focus:ring-4 focus:ring-primary/15 focus:border-primary",
+          error ? "border-danger focus:ring-danger/15" : "border-slate-300",
           className
         )}
         {...props}

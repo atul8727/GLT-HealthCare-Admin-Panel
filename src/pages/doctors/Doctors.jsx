@@ -162,19 +162,19 @@ export default function Doctors() {
             render: (row) => (
               <div className="flex flex-wrap items-center gap-4">
                 <button
-                  className="text-sm font-medium text-primary hover:underline"
+                  className="text-sm font-medium text-sky-600 hover:underline"
                   onClick={() => setViewDoctorId(row.id)}
                 >
                   View Details
                 </button>
                 <button
-                  className="text-sm font-medium text-primary hover:underline"
+                  className="text-sm font-medium text-green-600 hover:underline"
                   onClick={() => navigate(`/doctors/${row.id}/edit`)}
                 >
                   Edit
                 </button>
                 <button
-                  className="text-sm font-medium text-text-secondary hover:underline"
+                  className="text-sm font-medium text-amber-600 hover:underline"
                   onClick={() => {
                     setPasswordDoctor(row);
                     setNewPassword("");
@@ -260,7 +260,6 @@ export default function Doctors() {
         ) : (
           <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[
-              ["Doctor ID", viewDoctor.id],
               ["Name", viewDoctor.name],
               ["Specialization", viewDoctor.specialization],
               ["Email", viewDoctor.email],

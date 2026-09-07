@@ -11,6 +11,12 @@
  *     "user": { "admin_id": 1, "name": "GLT Admin", "email": "...", "role": "admin" }
  *   }
  * }
+ *
+ * NOTE ON SESSION STORAGE: the session intentionally lives in
+ * sessionStorage (not localStorage). That means the admin stays logged in
+ * across reloads and while navigating around the app, but closing the
+ * browser tab/window clears the session — so it has to be logged into
+ * again next time the app is opened fresh.
  */
 import apiClient from "../api/apiClient";
 import { ENDPOINTS } from "../api/endpoints";
@@ -35,8 +41,8 @@ export const authService = {
       throw new Error("Unexpected response from server.");
     }
 
-    localStorage.setItem(TOKEN_KEY, token);
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    sessionStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.setItem(USER_KEY, JSON.stringify(user));
 
     return { user, token };
   },
@@ -48,19 +54,19 @@ export const authService = {
       // Even if the logout call fails (endpoint down, network issue),
       // always clear the local session so the user is signed out client-side.
     } finally {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(USER_KEY);
     }
   },
 
   getCurrentUser: () => {
-    const raw = localStorage.getItem(USER_KEY);
+    const raw = sessionStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
   },
 
-  getToken: () => localStorage.getItem(TOKEN_KEY),
+  getToken: () => sessionStorage.getItem(TOKEN_KEY),
 
-  isAuthenticated: () => Boolean(localStorage.getItem(TOKEN_KEY)),
+  isAuthenticated: () => Boolean(sessionStorage.getItem(TOKEN_KEY)),
 };
 
 export default authService;

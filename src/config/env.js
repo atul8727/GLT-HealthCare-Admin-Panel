@@ -14,9 +14,8 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://glt.fc
 export const USE_LOCAL_STORAGE = {
   auth: false, // ✅ real API (/api/auth/login)
   patients: false, // ✅ real API (/api/patients)
-  doctors: true,
-  appointments: true,
-  prescriptions: true,
-  users: true,
-  settings: true,
+  doctors: false, // ✅ real API (/api/doctors)
+  consultations: false, // ✅ real API (/api/consultations)
+  vitals: false, // ✅ real API (/api/vitals)
+  prescriptions: false, // no backend endpoint yet
 };

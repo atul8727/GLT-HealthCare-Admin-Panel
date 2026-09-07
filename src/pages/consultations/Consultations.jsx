@@ -70,8 +70,8 @@ export default function Consultations() {
     () =>
       consultations.map((c) => ({
         ...c,
-        patientName: patientMap[c.patientId] || `#${c.patientId}`,
-        doctorName: doctorMap[c.doctorId] || `#${c.doctorId}`,
+        patientName: patientMap[c.patientId] || "Unknown Patient",
+        doctorName: doctorMap[c.doctorId] || "Unknown Doctor",
       })),
     [consultations, patientMap, doctorMap]
   );
@@ -176,7 +176,7 @@ export default function Consultations() {
             render: (row) => (
               <div className="flex flex-wrap items-center gap-3">
                 <button
-                  className="text-sm font-medium text-primary hover:underline"
+                  className="text-sm font-medium text-sky-600 hover:underline"
                   onClick={() => navigate(`/consultations/${row.id}`)}
                 >
                   View Details
@@ -184,7 +184,7 @@ export default function Consultations() {
                 {row.status === "Scheduled" && (
                   <>
                     <button
-                      className="text-sm font-medium text-text-secondary hover:underline"
+                      className="text-sm font-medium text-amber-600 hover:underline"
                       onClick={() => openReschedule(row)}
                     >
                       Reschedule

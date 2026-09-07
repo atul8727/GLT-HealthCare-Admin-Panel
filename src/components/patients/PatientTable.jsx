@@ -12,7 +12,6 @@ export default function PatientTable({ patients, loading, onDelete }) {
       emptyTitle="No patients found"
       emptyDescription="Register your first patient to get started."
       columns={[
-        // { key: "id", header: "Patient ID" },
         { key: "name", header: "Name" },
         { key: "mobile", header: "Mobile" },
         { key: "age", header: "Age", render: (row) => calculateAge(row.dob) },
@@ -28,7 +27,7 @@ export default function PatientTable({ patients, loading, onDelete }) {
           render: (row) => (
             <div className="flex items-center gap-1.5">
               <Button
-                variant="ghost"
+                variant="actionView"
                 size="sm"
                 icon={FiEye}
                 onClick={() => navigate(`/patients/${row.id}`)}
@@ -36,14 +35,14 @@ export default function PatientTable({ patients, loading, onDelete }) {
                 View
               </Button>
               <Button
-                variant="ghost"
+                variant="actionEdit"
                 size="sm"
                 icon={FiEdit2}
                 onClick={() => navigate(`/patients/${row.id}/edit`)}
               >
                 Edit
               </Button>
-              <Button variant="ghost" size="sm" icon={FiTrash2} onClick={() => onDelete(row)}>
+              <Button variant="actionDelete" size="sm" icon={FiTrash2} onClick={() => onDelete(row)}>
                 Delete
               </Button>
             </div>

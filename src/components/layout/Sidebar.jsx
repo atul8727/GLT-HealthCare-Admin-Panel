@@ -4,12 +4,10 @@ import {
   FiHome,
   FiUsers,
   FiUserCheck,
-  FiCalendar,
   FiVideo,
   FiClipboard,
   FiFileText,
-  FiUserPlus,
-  FiSettings,
+  FiUser,
 } from "react-icons/fi";
 import { classNames } from "../../utils/helpers";
 
@@ -26,7 +24,6 @@ const NAV_GROUPS = [
     label: "Clinic Management",
     items: [
       { to: "/doctors", label: "Doctors", icon: FiUserCheck },
-      // { to: "/appointments", label: "Appointments", icon: FiCalendar },
       { to: "/consultations", label: "Consultations", icon: FiVideo },
     ],
   },
@@ -37,13 +34,10 @@ const NAV_GROUPS = [
       { to: "/prescriptions", label: "Prescriptions", icon: FiFileText },
     ],
   },
-  // {
-  //   label: "Administration",
-  //   items: [
-  //     { to: "/users", label: "Staff & Users", icon: FiUserPlus },
-  //     { to: "/settings", label: "Settings", icon: FiSettings },
-  //   ],
-  // },
+  {
+    label: "Account",
+    items: [{ to: "/profile", label: "Profile", icon: FiUser }],
+  },
 ];
 
 export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
@@ -67,8 +61,6 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
               <span className="text-2xl font-bold tracking-tight text-white">
                 GLT
               </span>
-              {/* Optional: Small decorative dot */}
-              {/* <span className="absolute -top-1 -right-2 h-1.5 w-1.5 rounded-full bg-primary"></span> */}
             </div>
           </div>
         )}
@@ -91,9 +83,9 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
                   onClick={onCloseMobile}
                   className={({ isActive }) =>
                     classNames(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                       isActive
-                        ? "bg-primary text-white"
+                        ? "bg-gradient-to-r from-primary to-secondary text-white shadow-md shadow-primary/30"
                         : "text-slate-300 hover:bg-white/5 hover:text-white"
                     )
                   }
@@ -111,7 +103,7 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
       {!collapsed && (
         <div className="border-t border-white/5 px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
               <span className="text-xs font-medium text-white">A</span>
             </div>
             <div className="flex-1 min-w-0">
