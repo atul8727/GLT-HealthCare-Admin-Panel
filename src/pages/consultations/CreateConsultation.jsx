@@ -5,6 +5,7 @@ import consultationService from "../../services/consultations/consultationServic
 import patientService from "../../services/patients/patientService";
 import doctorService from "../../services/doctors/doctorService";
 import { Card, Input, Select, Button, Loader } from "../../components/ui";
+import { FiVideo } from "react-icons/fi";
 
 const EMPTY = {
   patientId: "",
@@ -53,7 +54,7 @@ export default function CreateConsultation() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Card title="Schedule Consultation">
+      <Card title="Schedule Consultation" icon={FiVideo}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Select
@@ -62,7 +63,7 @@ export default function CreateConsultation() {
               placeholder="Select patient"
               value={form.patientId}
               onChange={handleChange("patientId")}
-              options={patients.map((p) => ({ value: p.id, label: `${p.name} (#${p.id})` }))}
+              options={patients.map((p) => ({ value: p.id, label: `${p.name} — ${p.mobile}` }))}
             />
             <Select
               label="Doctor"

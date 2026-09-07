@@ -1,6 +1,6 @@
 import patientService from "../patients/patientService";
 import doctorService from "../doctors/doctorService";
-import appointmentService from "../appointments/appointmentService";
+import consultationService from "../consultations/consultationService";
 
 /**
  * Dashboard doesn't own data — it aggregates numbers from the other
@@ -9,25 +9,32 @@ import appointmentService from "../appointments/appointmentService";
  */
 export const dashboardService = {
   getSummary: async () => {
-    const [patients, doctors, appointments] = await Promise.all([
+    const [patients, { doctors }, consultations] = await Promise.all([
       patientService.getPatients(),
-      doctorService.getDoctors(),
-      appointmentService.getAppointments(),
+      doctorService.getDoctors({ limit: 200 }),
+      consultationService.getConsultations(),
     ]);
 
     const today = new Date().toISOString().slice(0, 10);
-    const todaysAppointments = appointments.filter((a) => a.date === today);
-    const upcoming = appointments.filter(
-      (a) => a.date > today && a.status === "Scheduled"
+    const todaysConsultations = consultations.filter((c) => c.date === today);
+    const upcoming = consultations.filter(
+      (c) => c.date > today && c.status === "Scheduled"
     );
+
+    const patientMap = Object.fromEntries(patients.map((p) => [p.id, p.name]));
+    const doctorMap = Object.fromEntries(doctors.map((d) => [d.id, d.name]));
 
     return {
       totalPatients: patients.length,
       totalDoctors: doctors.length,
-      todaysAppointments: todaysAppointments.length,
+      todaysAppointments: todaysConsultations.length,
       upcomingConsultations: upcoming.length,
       recentPatients: [...patients].slice(-5).reverse(),
-      todaysAppointmentsList: todaysAppointments,
+      todaysAppointmentsList: todaysConsultations.map((c) => ({
+        ...c,
+        patientName: patientMap[c.patientId] || "-",
+        doctorName: doctorMap[c.doctorId] || "-",
+      })),
     };
   },
 };

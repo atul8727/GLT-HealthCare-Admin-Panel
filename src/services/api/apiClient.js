@@ -8,8 +8,9 @@ import { API_BASE_URL } from "../../config/env";
 
 const TOKEN_KEY = "glt_auth_token";
 
+// Session lives in sessionStorage on purpose — see authService.js for why.
 function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
+  return sessionStorage.getItem(TOKEN_KEY);
 }
 
 async function request(path, { method = "GET", body, headers = {} } = {}) {

@@ -30,10 +30,10 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface px-4">
-      <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-8 shadow-card">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-xl">
         <div className="mb-6 flex flex-col items-center text-center">
-          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-lg font-bold text-white">
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-lg font-bold text-white shadow-lg shadow-primary/30">
             G
           </div>
           <h1 className="text-xl font-semibold text-text-primary">GLT Healthcare</h1>
@@ -59,7 +59,9 @@ export default function Login() {
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             placeholder="••••••••"
           />
-          {error && <p className="text-sm text-danger">{error}</p>}
+          {error && (
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-danger">{error}</p>
+          )}
           <Button type="submit" fullWidth loading={loading}>
             Sign In
           </Button>

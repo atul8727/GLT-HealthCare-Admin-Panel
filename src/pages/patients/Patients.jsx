@@ -34,7 +34,7 @@ export default function Patients() {
       (p) =>
         p.name?.toLowerCase().includes(q) ||
         p.mobile?.includes(q) ||
-        p.id?.toLowerCase().includes(q)
+        String(p.id ?? "").toLowerCase().includes(q)
     );
   }, [patients, debouncedSearch]);
 

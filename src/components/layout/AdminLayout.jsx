@@ -7,12 +7,10 @@ const PAGE_TITLES = {
   "/dashboard": "Dashboard",
   "/patients": "Patients",
   "/doctors": "Doctors",
-  "/appointments": "Appointments",
   "/consultations": "Consultations",
   "/medical-records": "Medical Records",
   "/prescriptions": "Prescriptions",
-  "/users": "Staff & Users",
-  "/settings": "Settings",
+  "/profile": "Profile",
 };
 
 function resolveTitle(pathname) {
@@ -38,6 +36,7 @@ export default function AdminLayout() {
           onToggleSidebar={() => setCollapsed((v) => !v)}
           onToggleMobileSidebar={() => setMobileOpen((v) => !v)}
           pageTitle={resolveTitle(location.pathname)}
+          showBack={location.pathname !== "/dashboard"}
         />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />

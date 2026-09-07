@@ -36,6 +36,13 @@ CONSULTATIONS: {
     CANCEL: (id) => `/api/consultations/${id}/cancel`,
   },
 
+  PRESCRIPTIONS: {
+    BY_PATIENT: (patientId) => `/api/prescriptions/patient/${patientId}`,
+    BY_CONSULTATION: (consultationId) => `/api/prescriptions/consultation/${consultationId}`,
+    CREATE: (consultationId) => `/api/prescriptions/consultation/${consultationId}`,
+    DETAIL: (id) => `/api/prescriptions/${id}`,
+  },
+
 VITALS: {
     CREATE: "/api/vitals/",
     BY_PATIENT: (patientId) => `/api/vitals/patient/${patientId}`,

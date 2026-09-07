@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import patientService from "../../services/patients/patientService";
 import PatientForm from "../../components/patients/PatientForm";
 import Card from "../../components/ui/Card";
+import { FiEdit } from "react-icons/fi";
 import Loader from "../../components/ui/Loader";
 
 export default function EditPatient() {
@@ -30,7 +31,7 @@ export default function EditPatient() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Card title={`Edit ${patient.name}`}>
+      <Card title={`Edit ${patient.name}`} icon={FiEdit}>
         <PatientForm initialValues={patient} onSubmit={handleSubmit} submitLabel="Save Changes" />
       </Card>
     </div>

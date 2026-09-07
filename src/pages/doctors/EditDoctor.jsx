@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import doctorService from "../../services/doctors/doctorService";
 import { Card, Input, Button, Loader } from "../../components/ui";
+import { FiEdit } from "react-icons/fi";
 
 export default function EditDoctor() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ export default function EditDoctor() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Card title={`Edit ${form.name}`}>
+      <Card title={`Edit ${form.name}`} icon={FiEdit}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input label="Doctor Name" required value={form.name} onChange={handleChange("name")} />

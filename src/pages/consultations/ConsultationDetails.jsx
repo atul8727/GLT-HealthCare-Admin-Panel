@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiDownload, FiPrinter, FiFileText } from "react-icons/fi";
 import consultationService from "../../services/consultations/consultationService";
 import patientService from "../../services/patients/patientService";
 import doctorService from "../../services/doctors/doctorService";
+import prescriptionService from "../../services/prescriptions/prescriptionService";
 import { Card, Button, StatusBadge, Loader, Modal, ConfirmDialog, Input, Select } from "../../components/ui";
 import { formatDate } from "../../utils/helpers";
+import { downloadPrescriptionPdf, printPrescriptionPdf } from "../../utils/pdfGenerator";
 
 export default function ConsultationDetails() {
   const { id } = useParams();
@@ -14,6 +16,7 @@ export default function ConsultationDetails() {
   const [consultation, setConsultation] = useState(null);
   const [patient, setPatient] = useState(null);
   const [doctor, setDoctor] = useState(null);
+  const [prescription, setPrescription] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [rescheduleForm, setRescheduleForm] = useState(null);
@@ -26,12 +29,14 @@ export default function ConsultationDetails() {
     try {
       const data = await consultationService.getConsultationById(id);
       setConsultation(data);
-      const [p, d] = await Promise.all([
+      const [p, d, presc] = await Promise.all([
         patientService.getPatientById(data.patientId).catch(() => null),
         doctorService.getDoctorById(data.doctorId).catch(() => null),
+        prescriptionService.getByConsultation(id).catch(() => null),
       ]);
       setPatient(p);
       setDoctor(d);
+      setPrescription(presc);
     } catch (err) {
       toast.error(err.message || "Failed to load consultation.");
     } finally {
@@ -91,34 +96,25 @@ export default function ConsultationDetails() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate("/consultations")}
-          className="flex items-center gap-1.5 text-sm font-medium text-text-secondary hover:text-text-primary"
-        >
-          <FiArrowLeft className="h-4 w-4" /> Back to Consultations
-        </button>
-        {isScheduled && (
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={openReschedule}>
-              Reschedule
-            </Button>
-            <Button variant="danger" onClick={() => setShowCancel(true)}>
-              Cancel Consultation
-            </Button>
-          </div>
-        )}
-      </div>
+      {isScheduled && (
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={openReschedule}>
+            Reschedule
+          </Button>
+          <Button variant="danger" onClick={() => setShowCancel(true)}>
+            Cancel Consultation
+          </Button>
+        </div>
+      )}
 
       <Card>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-text-primary">
-              {/* #{consultation.id} ·  */}
-              {patient?.name || `Patient #${consultation.patientId}`}
+              {patient?.name || "Patient"}
             </h2>
             <p className="text-sm text-text-secondary">
-              with {doctor?.name || `Doctor #${consultation.doctorId}`}
+              with {doctor?.name || "Doctor"}
               {doctor?.specialization ? ` · ${doctor.specialization}` : ""}
             </p>
           </div>
@@ -129,30 +125,30 @@ export default function ConsultationDetails() {
       <Card title="Consultation Info">
         <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {[
-            ["Date", formatDate(consultation.date)],
-            ["Time", consultation.time],
-            ["Type", consultation.type],
-            [
-              "Meet Link",
-              consultation.meetLink ? (
-                <a
-                  key="meet-link"
-                  href={consultation.meetLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  {consultation.meetLink}
-                </a>
-              ) : (
-                "-"
-              ),
-            ],
-            ["Patient Mobile", patient?.mobile || "-"],
-            ["Doctor Mobile", doctor?.mobile || "-"],
-            ["Created At", formatDate(consultation.createdAt)],
-            ["Last Updated", formatDate(consultation.updatedAt)],
-          ].map(([label, value]) => (
+  ["Date", formatDate(consultation.date)],
+  ["Time", consultation.time],
+  ["Type", consultation.type],
+  [
+    "Meet Link",
+    consultation.meetLink ? (
+      <a
+        key="meet-link"
+        href={consultation.meetLink}
+        target="_blank"
+        rel="noreferrer"
+        className="text-primary hover:underline"
+      >
+        {consultation.meetLink}
+      </a>
+    ) : (
+      "-"
+    ),
+  ],
+  ["Patient Mobile", patient?.mobile || "-"],
+  ["Doctor Mobile", doctor?.mobile || "-"],
+  ["Created At", formatDate(consultation.createdAt)],
+  ["Last Updated", formatDate(consultation.updatedAt)],
+].map(([label, value]) => (
             <div key={label}>
               <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">{label}</dt>
               <dd className="mt-1 text-sm text-text-primary">{value ?? "-"}</dd>
@@ -185,6 +181,64 @@ export default function ConsultationDetails() {
               </div>
             ))}
           </dl>
+        )}
+      </Card>
+
+      {/* Prescription is created by the doctor (Doctor Panel), not here —
+          same read-only convention as Clinical Notes above. Admin can only
+          view / download / print once it exists. */}
+      <Card
+        title="Prescription"
+        icon={FiFileText}
+        action={
+          prescription && (
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                icon={FiPrinter}
+                onClick={() => printPrescriptionPdf(prescription, { patient, doctor })}
+              >
+                Print
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                icon={FiDownload}
+                onClick={() => downloadPrescriptionPdf(prescription, { patient, doctor })}
+              >
+                Download
+              </Button>
+            </div>
+          )
+        }
+      >
+        {!prescription ? (
+          <p className="text-sm text-text-secondary">
+            No prescription yet — this is created by the doctor after the consultation.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-text-primary">
+                Prescription #{prescription.id} · {prescription.medicines.length}{" "}
+                {prescription.medicines.length === 1 ? "medicine" : "medicines"}
+              </p>
+              <p className="mt-0.5 text-xs text-text-secondary">
+                Issued {formatDate(prescription.createdAt)}
+                {prescription.followUpDate ? ` · Follow-up ${formatDate(prescription.followUpDate)}` : ""}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <StatusBadge status={prescription.status} />
+              <button
+                className="text-sm font-medium text-primary hover:underline"
+                onClick={() => navigate(`/prescriptions/${prescription.id}`)}
+              >
+                View Full Prescription
+              </button>
+            </div>
+          </div>
         )}
       </Card>
 

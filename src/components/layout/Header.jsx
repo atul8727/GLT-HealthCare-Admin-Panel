@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { FiMenu, FiBell, FiChevronDown, FiLogOut, FiUser, FiSettings } from "react-icons/fi";
+import { FiMenu, FiBell, FiChevronDown, FiLogOut, FiUser, FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import ConfirmDialog from "../ui/ConfirmDialog";
 import { getInitials } from "../../utils/helpers";
 
-export default function Header({ onToggleSidebar, onToggleMobileSidebar, pageTitle }) {
+export default function Header({ onToggleSidebar, onToggleMobileSidebar, pageTitle, showBack = false }) {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -18,7 +18,7 @@ export default function Header({ onToggleSidebar, onToggleMobileSidebar, pageTit
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 md:px-6">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <button
           onClick={onToggleMobileSidebar}
           className="rounded-md p-2 text-text-secondary hover:bg-slate-100 md:hidden"
@@ -31,7 +31,19 @@ export default function Header({ onToggleSidebar, onToggleMobileSidebar, pageTit
         >
           <FiMenu className="h-5 w-5" />
         </button>
-        <h1 className="text-base font-semibold text-text-primary md:text-lg">{pageTitle}</h1>
+
+        {showBack && (
+          <button
+            onClick={() => navigate(-1)}
+            title="Go back"
+            className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm font-medium text-text-secondary hover:bg-slate-100 hover:text-primary"
+          >
+            <FiArrowLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">Back</span>
+          </button>
+        )}
+
+        <h1 className="ml-1 text-base font-semibold text-text-primary md:text-lg">{pageTitle}</h1>
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
@@ -45,7 +57,7 @@ export default function Header({ onToggleSidebar, onToggleMobileSidebar, pageTit
             onClick={() => setMenuOpen((v) => !v)}
             className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-100"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-light text-sm font-semibold text-primary">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-sm font-semibold text-white">
               {getInitials(user?.name || "Admin")}
             </div>
             <div className="hidden text-left md:block">
@@ -60,14 +72,14 @@ export default function Header({ onToggleSidebar, onToggleMobileSidebar, pageTit
               className="absolute right-0 mt-2 w-48 rounded-lg border border-slate-200 bg-white py-1 shadow-card"
               onMouseLeave={() => setMenuOpen(false)}
             >
-              <button className="flex w-full items-center gap-2 px-4 py-2 text-sm text-text-primary hover:bg-slate-50">
-                <FiUser className="h-4 w-4" /> My Profile
-              </button>
               <button
-                onClick={() => navigate("/settings")}
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/profile");
+                }}
                 className="flex w-full items-center gap-2 px-4 py-2 text-sm text-text-primary hover:bg-slate-50"
               >
-                <FiSettings className="h-4 w-4" /> Settings
+                <FiUser className="h-4 w-4" /> Profile
               </button>
               <button
                 onClick={() => setConfirmLogout(true)}

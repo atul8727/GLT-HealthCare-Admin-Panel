@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import doctorService from "../../services/doctors/doctorService";
 import { Card, Input, Button } from "../../components/ui";
+import { FiUserPlus } from "react-icons/fi";
 
 const EMPTY = {
   name: "",
@@ -35,7 +36,7 @@ export default function CreateDoctor() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Card title="Add Doctor">
+      <Card title="Add Doctor" icon={FiUserPlus}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input label="Doctor Name" required value={form.name} onChange={handleChange("name")} />
