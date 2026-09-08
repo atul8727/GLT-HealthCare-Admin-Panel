@@ -47,10 +47,10 @@ export default function Header({ onToggleSidebar, onToggleMobileSidebar, pageTit
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
-        <button className="relative rounded-md p-2 text-text-secondary hover:bg-slate-100">
+        {/* <button className="relative rounded-md p-2 text-text-secondary hover:bg-slate-100">
           <FiBell className="h-5 w-5" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-danger" />
-        </button>
+        </button> */}
 
         <div className="relative">
           <button

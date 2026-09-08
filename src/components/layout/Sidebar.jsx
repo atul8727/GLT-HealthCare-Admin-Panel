@@ -102,15 +102,7 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
       {/* Footer with user info - Only show when expanded */}
       {!collapsed && (
         <div className="border-t border-white/5 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="text-xs font-medium text-white">A</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">Admin User</p>
-              <p className="text-xs text-slate-400 truncate">admin@glt.com</p>
-            </div>
-          </div>
+         
         </div>
       )}
     </div>
