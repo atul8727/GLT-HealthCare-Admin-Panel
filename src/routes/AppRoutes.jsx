@@ -5,6 +5,8 @@ import AdminLayout from "../components/layout/AdminLayout";
 import Login from "../pages/auth/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 
+import Enquiries from "../pages/enquiries/Enquiries";
+
 import Patients from "../pages/patients/Patients";
 import CreatePatient from "../pages/patients/CreatePatient";
 import PatientDetails from "../pages/patients/PatientDetails";
@@ -48,6 +50,9 @@ export default function AppRoutes() {
           <Route path="/medical-records" element={<MedicalRecords />} />
           <Route path="/prescriptions" element={<Prescriptions />} />
           <Route path="/prescriptions/:id" element={<PrescriptionDetails />} />
+          
+          <Route path="/enquiries" element={<Enquiries />} />
+
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
