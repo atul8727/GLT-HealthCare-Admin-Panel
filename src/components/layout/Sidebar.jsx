@@ -8,6 +8,7 @@ import {
   FiClipboard,
   FiFileText,
   FiUser,
+  FiMail ,
 } from "react-icons/fi";
 import { classNames } from "../../utils/helpers";
 
@@ -38,6 +39,11 @@ const NAV_GROUPS = [
     label: "Account",
     items: [{ to: "/profile", label: "Profile", icon: FiUser }],
   },
+
+  {
+  label: "Enquiries",
+  items: [{ to: "/enquiries", label: "Enquiries", icon: FiMail }],
+},
 ];
 
 export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {

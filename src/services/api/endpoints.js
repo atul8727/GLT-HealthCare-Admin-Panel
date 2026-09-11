@@ -51,4 +51,11 @@ VITALS: {
     DELETE: (id) => `/api/vitals/${id}`,
   },
 
+  ENQUIRIES: {
+  LIST: "/api/enquiries",
+  CREATE: "/api/enquiries",
+  DETAIL: (id) => `/api/enquiries/${id}`,
+  DELETE: (id) => `/api/enquiries/${id}`,
+},
+
 };

@@ -22,4 +22,7 @@ export const STATUS_BADGE_COLOR = {
   Completed: "success",
   Cancelled: "danger",
   Generated: "success",
+  New: "info",
+Contacted: "warning",
+Closed: "success",
 };

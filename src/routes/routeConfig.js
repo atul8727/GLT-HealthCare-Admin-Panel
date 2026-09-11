@@ -19,4 +19,5 @@ export const ROUTES = {
   PRESCRIPTIONS: "/prescriptions",
   PRESCRIPTION_DETAILS: (id) => `/prescriptions/${id}`,
   PROFILE: "/profile",
+  ENQUIRIES: "/enquiries",
 };

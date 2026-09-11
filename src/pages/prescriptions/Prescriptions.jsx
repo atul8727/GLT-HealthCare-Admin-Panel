@@ -104,7 +104,7 @@ export default function Prescriptions() {
         emptyTitle="No prescriptions yet"
         emptyDescription="Prescriptions created by doctors after a consultation will appear here."
         columns={[
-          { key: "id", header: "Prescription ID", render: (r) => `#${r.id}` },
+          // { key: "id", header: "Prescription ID", render: (r) => `#${r.id}` },
           {
             key: "patientName",
             header: "Patient",
