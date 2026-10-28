@@ -77,22 +77,24 @@ export default function Enquiries() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="rounded-[20px] border border-[#E2E8F0] bg-white p-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)] sm:p-6">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <SearchInput
+          className="flex-1"
           value={search}
           onChange={setSearch}
           placeholder="Search by name, mobile or email"
         />
-        <Select
-          value={status}
-          onChange={(e) => {
-            setPage(1);
-            setStatus(e.target.value);
-          }}
-          options={STATUS_OPTIONS}
-          className="sm:w-48"
-        />
+        <div className="shrink-0 sm:w-52">
+          <Select
+            value={status}
+            onChange={(e) => {
+              setPage(1);
+              setStatus(e.target.value);
+            }}
+            options={STATUS_OPTIONS}
+          />
+        </div>
       </div>
 
       <EnquiryTable
@@ -102,7 +104,7 @@ export default function Enquiries() {
         onDelete={setToDelete}
       />
 
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <Pagination className="mt-5" page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <EnquiryViewModal enquiry={viewing} onClose={() => setViewing(null)} />
 

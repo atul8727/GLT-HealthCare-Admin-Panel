@@ -7,15 +7,15 @@ export default function EmptyState({
   action,
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-14 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-light text-primary">
-        <Icon className="h-6 w-6" />
+    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-[#4F46E5] shadow-xs">
+        <Icon className="h-7 w-7" />
       </div>
-      <div>
-        <p className="text-sm font-medium text-text-primary">{title}</p>
-        {description && <p className="mt-1 text-sm text-text-secondary">{description}</p>}
-      </div>
-      {action}
+      <p className="text-base font-bold text-[#14142B]">{title}</p>
+      {description && (
+        <p className="mt-1 max-w-sm text-sm text-[#64748B]">{description}</p>
+      )}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }

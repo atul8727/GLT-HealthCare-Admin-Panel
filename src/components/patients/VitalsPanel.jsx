@@ -2,9 +2,22 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiPlus, FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
 import vitalService from "../../services/vitals/vitalService";
-import { Button, Modal, ConfirmDialog, StatusBadge } from "../ui";
+import { Button, Modal, ConfirmDialog, StatusBadge, Loader } from "../ui";
 import { formatDate } from "../../utils/helpers";
 import VitalForm from "./VitalForm";
+
+const TH =
+  "whitespace-nowrap px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-[0.06em] text-[#64748B]";
+const TD = "whitespace-nowrap px-5 py-4 align-middle text-sm text-[#14142B]";
+
+function Field({ label, children }) {
+  return (
+    <div className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3">
+      <dt className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">{label}</dt>
+      <dd className="mt-1 text-sm font-semibold text-[#14142B]">{children}</dd>
+    </div>
+  );
+}
 
 export default function VitalsPanel({ patientId, autoOpenCreate = false }) {
   const [vitals, setVitals] = useState([]);
@@ -93,18 +106,14 @@ export default function VitalsPanel({ patientId, autoOpenCreate = false }) {
 
   // Loading state
   if (loading) {
-    return (
-      <div className="flex justify-center py-8">
-        <div className="text-text-secondary">Loading vitals...</div>
-      </div>
-    );
+    return <Loader label="Loading vitals..." />;
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Header with Add Button */}
-      <div className="flex justify-between items-center">
-        <h3 className="text-sm font-medium text-text-secondary">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="rounded-full bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold text-[#4F46E5]">
           {vitals.length} {vitals.length === 1 ? "record" : "records"}
         </h3>
         <Button icon={FiPlus} onClick={() => setShowCreate(true)}>
@@ -114,94 +123,65 @@ export default function VitalsPanel({ patientId, autoOpenCreate = false }) {
 
       {/* Vitals Table */}
       {vitals.length === 0 ? (
-        <div className="text-center py-8 text-text-secondary border border-dashed border-gray-300 rounded-lg">
-          <p className="text-sm">No vitals recorded yet</p>
-          <p className="text-xs mt-1">
+        <div className="rounded-2xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC] px-4 py-12 text-center">
+          <p className="text-base font-bold text-[#14142B]">No vitals recorded yet</p>
+          <p className="mt-1 text-sm text-[#64748B]">
             Click "Add Vitals" to record the first vitals for this patient
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+        <div className="overflow-x-auto rounded-xl border border-[#E2E8F0] bg-white shadow-xs">
+          <table className="min-w-full border-collapse">
+            <thead className="border-b border-[#E2E8F0] bg-[#F8FAFC]">
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  BP
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Pulse
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Temp
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  SpO₂
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Weight
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  BMI
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-4 py-2 text-center text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className={TH}>Date</th>
+                <th className={TH}>BP</th>
+                <th className={TH}>Pulse</th>
+                <th className={TH}>Temp</th>
+                <th className={TH}>SpO₂</th>
+                <th className={TH}>Weight</th>
+                <th className={TH}>BMI</th>
+                <th className={TH}>Status</th>
+                <th className={`${TH} text-center`}>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#E2E8F0]">
               {vitals
                 .slice()
                 .reverse()
                 .map((vital) => (
-                  <tr key={vital.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-2 text-text-secondary text-xs">
-                      {formatDate(vital.createdAt)}
-                    </td>
-                    <td className="px-4 py-2 font-medium text-text-primary">
-                      {vital.bp || "-"}
-                    </td>
-                    <td className="px-4 py-2 text-text-primary">
-                      {vital.pulse ?? "-"}
-                    </td>
-                    <td className="px-4 py-2 text-text-primary">
-                      {vital.temperature ?? "-"}
-                    </td>
-                    <td className="px-4 py-2 text-text-primary">
-                      {vital.spo2 ?? "-"}%
-                    </td>
-                    <td className="px-4 py-2 text-text-primary">
-                      {vital.weight ?? "-"} kg
-                    </td>
-                    <td className="px-4 py-2 font-medium text-text-primary">
-                      {vital.bmi ?? "-"}
-                    </td>
-                    <td className="px-4 py-2">
+                  <tr key={vital.id} className="transition-colors hover:bg-slate-50/80">
+                    <td className={`${TD} text-[#64748B]`}>{formatDate(vital.createdAt)}</td>
+                    <td className={`${TD} font-bold`}>{vital.bp || "-"}</td>
+                    <td className={TD}>{vital.pulse ?? "-"}</td>
+                    <td className={TD}>{vital.temperature ?? "-"}</td>
+                    <td className={TD}>{vital.spo2 ?? "-"}%</td>
+                    <td className={TD}>{vital.weight ?? "-"} kg</td>
+                    <td className={`${TD} font-bold`}>{vital.bmi ?? "-"}</td>
+                    <td className={TD}>
                       <StatusBadge status={vital.status || "Active"} />
                     </td>
-                    <td className="px-4 py-2">
-                      <div className="flex items-center justify-center gap-1">
+                    <td className={TD}>
+                      <div className="flex items-center justify-center gap-2">
                         <Button
                           variant="actionView"
                           size="sm"
                           icon={FiEye}
+                          aria-label="View"
                           onClick={() => setViewing(vital)}
                         />
                         <Button
                           variant="actionEdit"
                           size="sm"
                           icon={FiEdit2}
+                          aria-label="Edit"
                           onClick={() => setEditing(vital)}
                         />
                         <Button
                           variant="actionDelete"
                           size="sm"
                           icon={FiTrash2}
+                          aria-label="Delete"
                           onClick={() => setToDelete(vital)}
                         />
                       </div>
@@ -253,83 +233,22 @@ export default function VitalsPanel({ patientId, autoOpenCreate = false }) {
       >
         {viewing && (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Recorded On
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {formatDate(viewing.createdAt)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Status
-                </dt>
-                <dd className="mt-1">
-                  <StatusBadge status={viewing.status || "Active"} />
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Blood Pressure
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {viewing.bp || "-"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Pulse (bpm)
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {viewing.pulse ?? "-"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Temperature (°F)
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {viewing.temperature ?? "-"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  SpO₂ (%)
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {viewing.spo2 ?? "-"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Weight (kg)
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {viewing.weight ?? "-"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  Height (cm)
-                </dt>
-                <dd className="mt-1 text-sm text-text-primary">
-                  {viewing.height ?? "-"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
-                  BMI
-                </dt>
-                <dd className="mt-1 text-sm font-medium text-text-primary">
-                  {viewing.bmi ?? "-"}
-                </dd>
-              </div>
-            </div>
+            <dl className="grid grid-cols-2 gap-3">
+              <Field label="Recorded On">{formatDate(viewing.createdAt)}</Field>
+              <Field label="Status">
+                <StatusBadge status={viewing.status || "Active"} />
+              </Field>
+              <Field label="Blood Pressure">{viewing.bp || "-"}</Field>
+              <Field label="Pulse (bpm)">{viewing.pulse ?? "-"}</Field>
+              <Field label="Temperature (°F)">{viewing.temperature ?? "-"}</Field>
+              <Field label="SpO₂ (%)">{viewing.spo2 ?? "-"}</Field>
+              <Field label="Weight (kg)">{viewing.weight ?? "-"}</Field>
+              <Field label="Height (cm)">{viewing.height ?? "-"}</Field>
+              <Field label="BMI">{viewing.bmi ?? "-"}</Field>
+            </dl>
             {viewing.updatedAt !== viewing.createdAt && (
-              <div className="pt-4 border-t border-gray-200">
-                <p className="text-xs text-text-muted">
+              <div className="border-t border-[#E2E8F0] pt-4">
+                <p className="text-xs text-[#64748B]">
                   Last Updated: {formatDate(viewing.updatedAt)}
                 </p>
               </div>

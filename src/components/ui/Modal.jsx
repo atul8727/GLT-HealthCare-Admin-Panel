@@ -18,31 +18,32 @@ export default function Modal({ isOpen, onClose, title, children, footer, size =
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <motion.div
-            className="absolute inset-0 bg-navy/50"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
           <motion.div
-            className={`relative w-full ${sizeMap[size]} rounded-xl bg-white shadow-xl`}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.15 }}
+            className={`relative w-full ${sizeMap[size] || sizeMap.md} overflow-hidden rounded-[20px] border border-[#E2E8F0] bg-white shadow-2xl`}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
           >
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <h3 className="text-base font-semibold text-text-primary">{title}</h3>
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-slate-50/60 px-6 py-4">
+              <h3 className="text-lg font-bold text-[#14142B]">{title}</h3>
               <button
                 onClick={onClose}
-                className="rounded-md p-1 text-text-secondary hover:bg-slate-100"
+                className="cursor-pointer rounded-xl p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                aria-label="Close dialog"
               >
                 <FiX className="h-5 w-5" />
               </button>
             </div>
-            <div className="max-h-[70vh] overflow-y-auto px-5 py-4">{children}</div>
+            <div className="max-h-[75vh] overflow-y-auto px-6 py-5">{children}</div>
             {footer && (
-              <div className="flex justify-end gap-2 border-t border-slate-100 px-5 py-4">
+              <div className="flex flex-col-reverse items-stretch justify-end gap-3 border-t border-[#E2E8F0] bg-slate-50/60 px-6 py-4 sm:flex-row sm:items-center">
                 {footer}
               </div>
             )}

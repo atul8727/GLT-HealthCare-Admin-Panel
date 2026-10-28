@@ -37,13 +37,18 @@ export default function EditDoctor() {
   };
 
   if (loading) return <Loader label="Loading doctor..." />;
-  if (!form) return <p className="text-text-secondary">Doctor not found.</p>;
+  if (!form)
+    return (
+      <p className="rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center font-medium text-[#64748B] shadow-xs">
+        Doctor not found.
+      </p>
+    );
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-3xl">
       <Card title={`Edit ${form.name}`} icon={FiEdit}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Input label="Doctor Name" required value={form.name} onChange={handleChange("name")} />
             <Input
               label="Specialization"
@@ -52,10 +57,16 @@ export default function EditDoctor() {
               onChange={handleChange("specialization")}
             />
             {/* Email can't be changed via this endpoint — shown read-only for reference. */}
-            <Input label="Email" type="email" value={form.email} disabled />
+            <Input
+              label="Email"
+              type="email"
+              value={form.email}
+              disabled
+              className="disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500 disabled:hover:border-[#CBD5E1]"
+            />
             <Input label="Mobile" required value={form.mobile} onChange={handleChange("mobile")} />
           </div>
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-3 border-t border-[#E2E8F0] pt-5">
             <Button type="button" variant="outline" onClick={() => navigate("/doctors")}>
               Cancel
             </Button>

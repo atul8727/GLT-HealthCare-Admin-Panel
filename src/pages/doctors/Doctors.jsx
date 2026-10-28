@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiEye, FiEdit2, FiKey, FiTrash2 } from "react-icons/fi";
 import toast from "react-hot-toast";
 import doctorService from "../../services/doctors/doctorService";
 import {
@@ -13,6 +13,8 @@ import {
   Modal,
   Input,
   ToggleSwitch,
+  Avatar,
+  Loader,
 } from "../../components/ui";
 import { useDebounce } from "../../hooks/useDebounce";
 import { formatDate } from "../../utils/helpers";
@@ -129,15 +131,24 @@ export default function Doctors() {
     }
   };
 
+  // Reset Password now lives inside the Doctor Details modal.
+  const openResetFromDetails = () => {
+    if (!viewDoctor) return;
+    setPasswordDoctor(viewDoctor);
+    setNewPassword("");
+    setViewDoctorId(null);
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="rounded-[20px] border border-[#E2E8F0] bg-white p-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)] sm:p-6">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <SearchInput
           value={search}
           onChange={setSearch}
           placeholder="Search by doctor name or specialization"
+          className="flex-1"
         />
-        <Button icon={FiPlus} onClick={() => navigate("/doctors/create")}>
+        <Button icon={FiPlus} onClick={() => navigate("/doctors/create")} className="shrink-0">
           Add Doctor
         </Button>
       </div>
@@ -147,10 +158,37 @@ export default function Doctors() {
         emptyTitle="No doctors found"
         emptyDescription="Add your first doctor to get started."
         columns={[
-          { key: "name", header: "Doctor Name" },
-          { key: "specialization", header: "Specialization" },
+          {
+            key: "name",
+            header: "Doctor Name",
+            render: (row) => (
+              <div className="flex items-center gap-3">
+                <Avatar name={row.name} />
+                <span className="whitespace-normal font-bold text-[#14142B] [overflow-wrap:anywhere]">
+                  {row.name}
+                </span>
+              </div>
+            ),
+          },
+          {
+            key: "specialization",
+            header: "Specialization",
+            render: (row) => (
+              <span className="block max-w-[180px] whitespace-normal [overflow-wrap:anywhere]">
+                {row.specialization}
+              </span>
+            ),
+          },
           { key: "mobile", header: "Mobile" },
-          { key: "email", header: "Email" },
+          {
+            key: "email",
+            header: "Email",
+            render: (row) => (
+              <span className="block max-w-[240px] whitespace-normal [overflow-wrap:anywhere]">
+                {row.email}
+              </span>
+            ),
+          },
           {
             key: "status",
             header: "Status",
@@ -160,44 +198,45 @@ export default function Doctors() {
             key: "actions",
             header: "Actions",
             render: (row) => (
-              <div className="flex flex-wrap items-center gap-4">
-                <button
-                  className="text-sm font-medium text-sky-600 hover:underline"
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="actionView"
+                  size="sm"
+                  icon={FiEye}
                   onClick={() => setViewDoctorId(row.id)}
                 >
                   View Details
-                </button>
-                <button
-                  className="text-sm font-medium text-green-600 hover:underline"
+                </Button>
+                <Button
+                  variant="actionEdit"
+                  size="sm"
+                  icon={FiEdit2}
                   onClick={() => navigate(`/doctors/${row.id}/edit`)}
                 >
                   Edit
-                </button>
-                <button
-                  className="text-sm font-medium text-amber-600 hover:underline"
-                  onClick={() => {
-                    setPasswordDoctor(row);
-                    setNewPassword("");
-                  }}
-                >
-                  Reset Password
-                </button>
-                <div className="flex items-center gap-2">
+                </Button>
+                <div className="flex items-center gap-2 px-1">
                   <ToggleSwitch
                     checked={row.status === "Active"}
                     loading={statusLoadingId === row.id}
                     onChange={(nextChecked) => handleToggleStatus(row, nextChecked)}
                   />
-                  <span className="text-xs text-text-secondary">
+                  <span
+                    className={`w-6 text-xs font-bold ${
+                      row.status === "Active" ? "text-[#16A34A]" : "text-slate-400"
+                    }`}
+                  >
                     {row.status === "Active" ? "On" : "Off"}
                   </span>
                 </div>
-                <button
-                  className="text-sm font-medium text-danger hover:underline"
+                <Button
+                  variant="actionDelete"
+                  size="sm"
+                  icon={FiTrash2}
                   onClick={() => setToDelete(row)}
                 >
                   Delete
-                </button>
+                </Button>
               </div>
             ),
           },
@@ -205,7 +244,12 @@ export default function Doctors() {
         rows={doctors}
       />
 
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+        className="mt-5"
+      />
 
       <ConfirmDialog
         isOpen={Boolean(toDelete)}
@@ -250,15 +294,25 @@ export default function Doctors() {
         title="Doctor Details"
         size="md"
         footer={
-          <Button variant="outline" onClick={() => setViewDoctorId(null)}>
-            Close
-          </Button>
+          <>
+            <Button
+              variant="outline"
+              icon={FiKey}
+              disabled={viewLoading || !viewDoctor}
+              onClick={openResetFromDetails}
+            >
+              Reset Password
+            </Button>
+            <Button variant="outline" onClick={() => setViewDoctorId(null)}>
+              Close
+            </Button>
+          </>
         }
       >
         {viewLoading || !viewDoctor ? (
-          <p className="py-6 text-center text-sm text-text-secondary">Loading...</p>
+          <Loader />
         ) : (
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
               ["Name", viewDoctor.name],
               ["Specialization", viewDoctor.specialization],
@@ -268,11 +322,16 @@ export default function Doctors() {
               ["Created At", formatDate(viewDoctor.createdAt)],
               ["Updated At", formatDate(viewDoctor.updatedAt)],
             ].map(([label, value]) => (
-              <div key={label}>
-                <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
+              <div
+                key={label}
+                className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3"
+              >
+                <dt className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">
                   {label}
                 </dt>
-                <dd className="mt-1 text-sm text-text-primary">{value ?? "-"}</dd>
+                <dd className="mt-1 break-words text-sm font-semibold text-[#14142B]">
+                  {value ?? "-"}
+                </dd>
               </div>
             ))}
           </dl>

@@ -8,7 +8,7 @@ import doctorService from "../../services/doctors/doctorService";
 import prescriptionService from "../../services/prescriptions/prescriptionService";
 import { Card, Tabs, Button, DataTable, StatusBadge, Loader } from "../../components/ui";
 import VitalsPanel from "../../components/patients/VitalsPanel";
-import { calculateAge, formatDate } from "../../utils/helpers";
+import { calculateAge, formatDate, getInitials } from "../../utils/helpers";
 import { downloadPrescriptionPdf } from "../../utils/pdfGenerator";
 
 const TABS = [
@@ -80,34 +80,43 @@ export default function PatientDetails() {
   }, []);
 
   if (loading) return <Loader label="Loading patient profile..." />;
-  if (!patient) return <p className="text-text-secondary">Patient not found.</p>;
+  if (!patient)
+    return (
+      <p className="rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center font-medium text-[#64748B] shadow-xs">
+        Patient not found.
+      </p>
+    );
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-end">
-        <Link to={`/patients/${id}/edit`}>
-          <Button variant="outline" icon={FiEdit2}>
-            Edit Patient
-          </Button>
-        </Link>
-      </div>
-
+    <div className="space-y-5">
       <Card>
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-text-primary">{patient.name}</h2>
-            <p className="text-sm text-text-secondary">{patient.mobile}</p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#4F46E5] to-[#6D5BF0] text-lg font-bold text-white shadow-[0_6px_14px_rgba(79,70,229,0.3)]">
+              {getInitials(patient.name)}
+            </span>
+            <div className="min-w-0">
+              <h2 className="truncate text-xl font-extrabold text-[#14142B]">{patient.name}</h2>
+              <p className="text-sm text-[#64748B]">{patient.mobile}</p>
+            </div>
           </div>
-          <StatusBadge status={patient.status || "Active"} />
+          <div className="flex flex-wrap items-center gap-3">
+            <StatusBadge status={patient.status || "Active"} />
+            <Link to={`/patients/${id}/edit`}>
+              <Button variant="edit" icon={FiEdit2}>
+                Edit Patient
+              </Button>
+            </Link>
+          </div>
         </div>
       </Card>
 
       <Card bodyClassName="p-0">
-        <div className="px-5 pt-2">
+        <div className="px-6 pt-5">
           <Tabs tabs={TABS} active={activeTab} onChange={setActiveTab} />
         </div>
 
-        <div className="p-5">
+        <div className="p-6">
           {activeTab === "overview" && (
             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {[
@@ -120,11 +129,14 @@ export default function PatientDetails() {
                 ["Emergency Contact", patient.emergencyContact || "-"],
                 ["Registered On", formatDate(patient.createdAt)],
               ].map(([label, value]) => (
-                <div key={label}>
-                  <dt className="text-xs font-medium uppercase tracking-wide text-text-muted">
+                <div
+                  key={label}
+                  className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3"
+                >
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">
                     {label}
                   </dt>
-                  <dd className="mt-1 text-sm text-text-primary">{value}</dd>
+                  <dd className="mt-1 text-sm font-semibold text-[#14142B]">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -170,7 +182,7 @@ export default function PatientDetails() {
                         View
                       </Button>
                       <Button
-                        variant="outline"
+                        variant="outlineIndigo"
                         size="sm"
                         icon={FiDownload}
                         onClick={() =>

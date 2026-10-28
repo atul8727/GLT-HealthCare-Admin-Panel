@@ -1,32 +1,51 @@
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import Button from "./Button";
+import { classNames } from "../../utils/helpers";
 
-export default function Pagination({ page, totalPages, onPageChange }) {
-  if (totalPages <= 1) return null;
+const NAV_BTN =
+  "cursor-pointer rounded-xl border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#4F46E5] shadow-xs transition-colors " +
+  "hover:border-indigo-200 hover:bg-indigo-50 " +
+  "disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:hover:border-[#E2E8F0] disabled:hover:bg-slate-50";
+
+export default function Pagination({
+  page = 1,
+  totalPages = 1,
+  totalItems,
+  showingCount,
+  onPageChange,
+  className,
+}) {
+  const displayPages = Math.max(1, totalPages || 1);
+  const displayCurrent = Math.max(1, page || 1);
+
   return (
-    <div className="flex items-center justify-between px-1 py-3">
-      <p className="text-sm text-text-secondary">
-        Page {page} of {totalPages}
+    <div
+      className={classNames(
+        "flex flex-wrap items-center justify-between gap-3 border-t border-[#E2E8F0] px-1 pt-4",
+        className
+      )}
+    >
+      <p className="text-sm text-[#64748B]">
+        Page {displayCurrent} of {displayPages}
+        {totalItems !== undefined && (
+          <span> — Showing {showingCount !== undefined ? showingCount : totalItems} of {totalItems}</span>
+        )}
       </p>
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          icon={FiChevronLeft}
-          disabled={page <= 1}
-          onClick={() => onPageChange(page - 1)}
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          disabled={displayCurrent <= 1}
+          onClick={() => onPageChange && onPageChange(displayCurrent - 1)}
+          className={NAV_BTN}
         >
-          Prev
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={page >= totalPages}
-          onClick={() => onPageChange(page + 1)}
+          Previous
+        </button>
+        <button
+          type="button"
+          disabled={displayCurrent >= displayPages}
+          onClick={() => onPageChange && onPageChange(displayCurrent + 1)}
+          className={NAV_BTN}
         >
           Next
-          <FiChevronRight className="h-4 w-4" />
-        </Button>
+        </button>
       </div>
     </div>
   );

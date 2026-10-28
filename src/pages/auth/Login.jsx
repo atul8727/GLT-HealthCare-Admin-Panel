@@ -30,17 +30,17 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-xl">
-        <div className="mb-6 flex flex-col items-center text-center">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-lg font-bold text-white shadow-lg shadow-primary/30">
+    <div className="flex min-h-screen items-center justify-center px-4 py-8">
+      <div className="w-full max-w-sm rounded-[20px] border border-[#E2E8F0] bg-white p-6 shadow-[0_8px_24px_rgba(79,70,229,0.08)] sm:p-8">
+        <div className="mb-7 flex flex-col items-center text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#4F46E5] to-[#6D5BF0] text-xl font-bold text-white shadow-lg shadow-[#4F46E5]/30">
             G
           </div>
-          <h1 className="text-xl font-semibold text-text-primary">GLT Healthcare</h1>
-          <p className="mt-1 text-sm text-text-secondary">Sign in to the Admin Panel</p>
+          <h1 className="text-2xl font-bold text-[#14142B]">GLT Healthcare</h1>
+          <p className="mt-1 text-sm text-[#64748B]">Sign in to the Admin Panel</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             label="Email"
             type="email"
@@ -60,7 +60,12 @@ export default function Login() {
             placeholder="••••••••"
           />
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-danger">{error}</p>
+            <p
+              role="alert"
+              className="rounded-xl border border-[#FECDD3] bg-[#FFE4E6] px-3.5 py-2.5 text-sm font-medium text-[#BE123C]"
+            >
+              {error}
+            </p>
           )}
           <Button type="submit" fullWidth loading={loading}>
             Sign In

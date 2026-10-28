@@ -17,7 +17,7 @@ export default function CreatePatient() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-3xl">
       <Card title="Register Patient" icon={FiUserPlus}>
         <PatientForm onSubmit={handleSubmit} submitLabel="Create Patient" />
       </Card>

@@ -53,10 +53,10 @@ export default function CreateConsultation() {
   if (loading) return <Loader label="Loading patients and doctors..." />;
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-3xl">
       <Card title="Schedule Consultation" icon={FiVideo}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Select
               label="Patient"
               required
@@ -89,15 +89,17 @@ export default function CreateConsultation() {
               ]}
             />
             {form.type === "Online" && (
-              <Input
-                label="Meet Link"
-                placeholder="https://meet.google.com/..."
-                value={form.meetLink}
-                onChange={handleChange("meetLink")}
-              />
+              <div className="sm:col-span-2">
+                <Input
+                  label="Meet Link"
+                  placeholder="https://meet.google.com/..."
+                  value={form.meetLink}
+                  onChange={handleChange("meetLink")}
+                />
+              </div>
             )}
           </div>
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex justify-end gap-3 border-t border-[#E2E8F0] pt-5">
             <Button type="button" variant="outline" onClick={() => navigate("/consultations")}>
               Cancel
             </Button>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiFileText } from "react-icons/fi";
 import patientService from "../../services/patients/patientService";
-import { DataTable, Button, SearchInput } from "../../components/ui";
+import { DataTable, Button, SearchInput, Avatar } from "../../components/ui";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useMemo } from "react";
 
@@ -29,14 +29,25 @@ export default function MedicalRecords() {
   }, [patients, debouncedSearch]);
 
   return (
-    <div className="space-y-4">
-      <SearchInput value={search} onChange={setSearch} placeholder="Search patient to view history" />
+    <div className="rounded-[20px] border border-[#E2E8F0] bg-white p-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)] sm:p-6">
+      <div className="mb-5">
+        <SearchInput value={search} onChange={setSearch} placeholder="Search patient to view history" />
+      </div>
 
       <DataTable
         loading={loading}
         emptyTitle="No patient records yet"
         columns={[
-          { key: "name", header: "Name" },
+          {
+            key: "name",
+            header: "Name",
+            render: (row) => (
+              <div className="flex items-center gap-3">
+                <Avatar name={row.name} />
+                <span className="text-sm font-bold text-[#14142B]">{row.name}</span>
+              </div>
+            ),
+          },
           { key: "mobile", header: "Mobile" },
           {
             key: "actions",

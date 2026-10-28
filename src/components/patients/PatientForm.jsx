@@ -48,8 +48,8 @@ export default function PatientForm({ initialValues, onSubmit, submitLabel = "Cr
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Input
           label="Patient Name"
           required
@@ -96,16 +96,17 @@ export default function PatientForm({ initialValues, onSubmit, submitLabel = "Cr
           onChange={handleChange("emergencyContact")}
           placeholder="Alternate contact number"
         />
-        <Input
-          label="Address"
-          className="sm:col-span-2"
-          value={form.address}
-          onChange={handleChange("address")}
-          placeholder="Full address"
-        />
+        <div className="sm:col-span-2">
+          <Input
+            label="Address"
+            value={form.address}
+            onChange={handleChange("address")}
+            placeholder="Full address"
+          />
+        </div>
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="flex justify-end gap-3 border-t border-[#E2E8F0] pt-5">
         <Button type="submit" loading={saving}>
           {submitLabel}
         </Button>

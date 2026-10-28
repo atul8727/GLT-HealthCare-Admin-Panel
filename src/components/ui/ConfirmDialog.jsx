@@ -28,7 +28,7 @@ export default function ConfirmDialog({
         </>
       }
     >
-      <p className="text-sm text-text-secondary">{message}</p>
+      <p className="text-sm leading-relaxed text-[#64748B]">{message}</p>
     </Modal>
   );
 }

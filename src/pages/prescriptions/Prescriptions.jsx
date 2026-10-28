@@ -1,26 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FiDownload, FiPrinter, FiEye } from "react-icons/fi";
+import { FiDownload, FiPrinter, FiEye, FiVideo } from "react-icons/fi";
 import prescriptionService from "../../services/prescriptions/prescriptionService";
 import consultationService from "../../services/consultations/consultationService";
 import patientService from "../../services/patients/patientService";
 import doctorService from "../../services/doctors/doctorService";
-import { DataTable, StatusBadge, Button, SearchInput } from "../../components/ui";
+import { DataTable, StatusBadge, Button, SearchInput, Avatar } from "../../components/ui";
 import { formatDate } from "../../utils/helpers";
 import { downloadPrescriptionPdf, printPrescriptionPdf } from "../../utils/pdfGenerator";
 
-/**
- * Prescriptions (global list) — Route: /prescriptions
- *
- * There's no "list all prescriptions" endpoint on the backend yet, only:
- *   GET /api/prescriptions/patient/:patientId
- *   GET /api/prescriptions/consultation/:consultationId
- *   GET /api/prescriptions/:id
- * So this page builds the list itself: load every consultation, then ask
- * for the prescription attached to each one. Consultations with no
- * prescription yet (not written by the doctor) are simply skipped.
- */
+
 export default function Prescriptions() {
   const navigate = useNavigate();
   const [rows, setRows] = useState([]);
@@ -90,8 +80,8 @@ export default function Prescriptions() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="rounded-[20px] border border-[#E2E8F0] bg-white p-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)] sm:p-6">
+      <div className="mb-5">
         <SearchInput
           value={search}
           onChange={setSearch}
@@ -109,12 +99,15 @@ export default function Prescriptions() {
             key: "patientName",
             header: "Patient",
             render: (r) => (
-              <button
-                className="text-sm font-medium text-primary hover:underline"
-                onClick={() => navigate(`/patients/${r.patientId}`)}
-              >
-                {r.patientName}
-              </button>
+              <div className="flex items-center gap-3">
+                <Avatar name={r.patientName} />
+                <button
+                  className="cursor-pointer text-left text-sm font-bold text-[#4F46E5] hover:underline"
+                  onClick={() => navigate(`/patients/${r.patientId}`)}
+                >
+                  {r.patientName}
+                </button>
+              </div>
             ),
           },
           { key: "doctorName", header: "Doctor" },
@@ -124,7 +117,7 @@ export default function Prescriptions() {
             key: "actions",
             header: "Actions",
             render: (row) => (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2">
                 <Button
                   variant="actionView"
                   size="sm"
@@ -133,18 +126,30 @@ export default function Prescriptions() {
                 >
                   View
                 </Button>
-                <Button variant="outline" size="sm" icon={FiDownload} onClick={() => handleDownload(row)}>
+                <Button
+                  variant="outlineIndigo"
+                  size="sm"
+                  icon={FiDownload}
+                  onClick={() => handleDownload(row)}
+                >
                   Download
                 </Button>
-                <Button variant="ghost" size="sm" icon={FiPrinter} onClick={() => handlePrint(row)}>
+                <Button
+                  variant="outlineIndigo"
+                  size="sm"
+                  icon={FiPrinter}
+                  onClick={() => handlePrint(row)}
+                >
                   Print
                 </Button>
-                <button
-                  className="text-sm font-medium text-sky-600 hover:underline"
+                <Button
+                  variant="outline"
+                  size="sm"
+                  icon={FiVideo}
                   onClick={() => navigate(`/consultations/${row.consultationId}`)}
                 >
                   Open Consultation
-                </button>
+                </Button>
               </div>
             ),
           },
