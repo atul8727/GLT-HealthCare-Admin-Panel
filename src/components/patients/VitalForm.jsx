@@ -109,8 +109,8 @@ export default function VitalForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <Input
           label="Blood Pressure"
           required
@@ -178,19 +178,22 @@ export default function VitalForm({
           min={30}
         />
 
-        <Input
-          label="BMI"
-          type="number"
-          step="0.1"
-          value={form.bmi}
-          onChange={handleChange("bmi")}
-          placeholder="Auto-calculated"
-          className="sm:col-span-2 lg:col-span-3"
-          helpText="BMI is auto-calculated from weight & height. You can manually edit if needed."
-        />
+        <div className="sm:col-span-2 lg:col-span-3">
+          <Input
+            label="BMI"
+            type="number"
+            step="0.1"
+            value={form.bmi}
+            onChange={handleChange("bmi")}
+            placeholder="Auto-calculated"
+          />
+          <p className="mt-1.5 text-xs text-[#64748B]">
+            BMI is auto-calculated from weight & height. You can manually edit if needed.
+          </p>
+        </div>
       </div>
 
-      <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
+      <div className="flex justify-end gap-3 border-t border-[#E2E8F0] pt-5">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel

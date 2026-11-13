@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   FiHome,
   FiUsers,
@@ -8,7 +8,7 @@ import {
   FiClipboard,
   FiFileText,
   FiUser,
-  FiMail ,
+  FiMail,
 } from "react-icons/fi";
 import { classNames } from "../../utils/helpers";
 
@@ -39,46 +39,41 @@ const NAV_GROUPS = [
     label: "Account",
     items: [{ to: "/profile", label: "Profile", icon: FiUser }],
   },
-
   {
-  label: "Enquiries",
-  items: [{ to: "/enquiries", label: "Enquiries", icon: FiMail }],
-},
+    label: "Enquiries",
+    items: [{ to: "/enquiries", label: "Enquiries", icon: FiMail }],
+  },
 ];
 
-export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
-  const content = (
-    <div className="flex h-full flex-col bg-navy text-slate-300">
-      {/* Logo Section - Improved with better text logo */}
-      <div className="flex h-20 shrink-0 items-center justify-center px-4 border-b border-white/5">
+function SidebarContent({ collapsed, onCloseMobile }) {
+  return (
+    <div className="flex h-full flex-col bg-[#0F172A]">
+      {/* Logo */}
+      <div className="flex h-20 shrink-0 items-center justify-center border-b border-white/10 px-4">
         {!collapsed ? (
-          // Expanded view - Show full logo with image
-          <div className="flex items-center justify-center w-full">
-            <img
-              src="/GLT_logo.jpeg"
-              alt="GLT Healthcare"
-              className="h-14 w-auto object-contain max-w-[180px]"
-            />
-          </div>
+          <img
+            src="/GLT_logo.jpeg"
+            alt="GLT Healthcare"
+            className="h-14 w-auto max-w-[180px] rounded-md bg-white object-contain"
+          />
         ) : (
-          // Collapsed view - Show only "GLT" text logo
-          <div className="flex items-center justify-center w-full">
-            <div className="relative">
-              <span className="text-2xl font-bold tracking-tight text-white">
-                GLT
-              </span>
-            </div>
-          </div>
+          <span className="bg-gradient-to-r from-[#38BDF8] to-[#0EA5E9] bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
+            GLT
+          </span>
         )}
       </div>
 
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
+      {/* Navigation */}
+      <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-5">
         {NAV_GROUPS.map((group, idx) => (
           <div key={idx}>
             {group.label && !collapsed && (
-              <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p className="mb-2 px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 {group.label}
               </p>
+            )}
+            {group.label && collapsed && idx > 0 && (
+              <div className="mx-3 mb-3 border-t border-white/10" />
             )}
             <div className="space-y-1">
               {group.items.map((item) => (
@@ -89,10 +84,11 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
                   onClick={onCloseMobile}
                   className={({ isActive }) =>
                     classNames(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+                      "flex items-center gap-3 rounded-xl py-2.5 text-sm font-semibold transition-all duration-150",
+                      collapsed ? "justify-center px-0" : "px-3",
                       isActive
-                        ? "bg-gradient-to-r from-primary to-secondary text-white shadow-md shadow-primary/30"
-                        : "text-slate-300 hover:bg-white/5 hover:text-white"
+                        ? "bg-gradient-to-r from-[#1D6FE0] to-[#0EA5E9] text-white shadow-[0_6px_14px_rgba(14,165,233,0.35)]"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                     )
                   }
                 >
@@ -104,16 +100,11 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
           </div>
         ))}
       </nav>
-
-      {/* Footer with user info - Only show when expanded */}
-      {!collapsed && (
-        <div className="border-t border-white/5 px-4 py-3">
-         
-        </div>
-      )}
     </div>
   );
+}
 
+export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
   return (
     <>
       {/* Desktop / tablet sidebar */}
@@ -122,24 +113,32 @@ export default function Sidebar({ collapsed, mobileOpen, onCloseMobile }) {
         transition={{ duration: 0.25, ease: "easeInOut" }}
         className="hidden shrink-0 md:block"
       >
-        {content}
+        <SidebarContent collapsed={collapsed} onCloseMobile={undefined} />
       </motion.aside>
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          <div className="absolute inset-0 bg-navy/50" onClick={onCloseMobile} />
-          <motion.div
-            initial={{ x: -280 }}
-            animate={{ x: 0 }}
-            exit={{ x: -280 }}
-            transition={{ duration: 0.25 }}
-            className="absolute inset-y-0 left-0 w-[280px]"
-          >
-            {content}
-          </motion.div>
-        </div>
-      )}
+      {/* Mobile drawer (always expanded) */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <div className="fixed inset-0 z-40 md:hidden">
+            <motion.div
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onCloseMobile}
+            />
+            <motion.div
+              initial={{ x: -280 }}
+              animate={{ x: 0 }}
+              exit={{ x: -280 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-y-0 left-0 w-[280px] shadow-2xl"
+            >
+              <SidebarContent collapsed={false} onCloseMobile={onCloseMobile} />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

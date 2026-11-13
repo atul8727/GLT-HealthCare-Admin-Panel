@@ -52,14 +52,15 @@ export default function Patients() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="rounded-[20px] border border-[#E2E8F0] bg-white p-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)] sm:p-6">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <SearchInput
           value={search}
           onChange={setSearch}
           placeholder="Search by name, mobile or patient ID"
+          className="flex-1"
         />
-        <Button icon={FiPlus} onClick={() => navigate("/patients/create")}>
+        <Button icon={FiPlus} onClick={() => navigate("/patients/create")} className="shrink-0">
           Add Patient
         </Button>
       </div>

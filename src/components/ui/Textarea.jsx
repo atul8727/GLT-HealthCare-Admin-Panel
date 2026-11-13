@@ -5,22 +5,28 @@ export default function Textarea({ label, error, className, required, id, ...pro
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={areaId} className="mb-1.5 block text-sm font-medium text-text-primary">
-          {label} {required && <span className="text-danger">*</span>}
+        <label
+          htmlFor={areaId}
+          className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#14142B]"
+        >
+          {label} {required && <span className="text-[#E11D48]">*</span>}
         </label>
       )}
       <textarea
         id={areaId}
         rows={3}
         className={classNames(
-          "w-full rounded-lg border px-3 py-2 text-sm text-text-primary placeholder:text-text-muted",
-          "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors",
-          error ? "border-danger" : "border-slate-300",
+          "w-full rounded-xl border bg-[#F8FAFC] p-3.5 text-sm text-[#14142B] placeholder:text-[#94A3B8]",
+          "transition-all duration-150 hover:border-slate-400",
+          "focus:border-[#4F46E5] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#4F46E5]/15",
+          error
+            ? "border-[#E11D48] focus:ring-[#E11D48]/15"
+            : "border-[#CBD5E1]",
           className
         )}
         {...props}
       />
-      {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+      {error && <p className="mt-1.5 text-xs font-medium text-[#E11D48]">{error}</p>}
     </div>
   );
 }

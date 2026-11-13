@@ -27,10 +27,15 @@ export default function EditPatient() {
   };
 
   if (loading) return <Loader label="Loading patient..." />;
-  if (!patient) return <p className="text-text-secondary">Patient not found.</p>;
+  if (!patient)
+    return (
+      <p className="rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center font-medium text-[#64748B] shadow-xs">
+        Patient not found.
+      </p>
+    );
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-3xl">
       <Card title={`Edit ${patient.name}`} icon={FiEdit}>
         <PatientForm initialValues={patient} onSubmit={handleSubmit} submitLabel="Save Changes" />
       </Card>

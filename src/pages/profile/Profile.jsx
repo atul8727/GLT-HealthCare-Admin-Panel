@@ -21,60 +21,71 @@ export default function Profile() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-2xl space-y-5">
       <Card bodyClassName="p-0" className="overflow-hidden">
-        <div className="bg-gradient-to-r from-primary to-secondary px-6 py-8 text-white">
+        <div className="bg-gradient-to-r from-[#4F46E5] to-[#6D5BF0] px-6 py-8 text-white">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-xl font-bold ring-4 ring-white/30">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/20 text-xl font-bold ring-4 ring-white/30">
               {getInitials(user?.name || "Admin")}
             </div>
-            <div>
-              <h2 className="text-xl font-semibold">{user?.name || "Admin"}</h2>
-              <p className="text-sm text-white/80">{user?.email}</p>
+            <div className="min-w-0">
+              <h2 className="text-xl font-bold [overflow-wrap:anywhere]">{user?.name || "Admin"}</h2>
+              <p className="text-sm text-white/80 [overflow-wrap:anywhere]">{user?.email}</p>
             </div>
           </div>
         </div>
 
-        <div className="divide-y divide-slate-100">
-          <div className="flex items-center gap-3 px-6 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-light text-primary">
-              <FiUser className="h-4 w-4" />
+        <div className="grid grid-cols-1 gap-3 p-4 sm:p-6">
+          <div className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-[#4F46E5]">
+              <FiUser className="h-5 w-5" />
             </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-text-muted">Name</p>
-              <p className="text-sm font-medium text-text-primary">{user?.name || "-"}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 px-6 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-info">
-              <FiMail className="h-4 w-4" />
-            </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-text-muted">Email</p>
-              <p className="text-sm font-medium text-text-primary">{user?.email || "-"}</p>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">Name</p>
+              <p className="mt-0.5 text-sm font-semibold text-[#14142B] [overflow-wrap:anywhere]">
+                {user?.name || "-"}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 px-6 py-4">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50 text-success">
-              <FiShield className="h-4 w-4" />
+          <div className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-[#0EA5E9]">
+              <FiMail className="h-5 w-5" />
             </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-text-muted">Role</p>
-              <p className="text-sm font-medium capitalize text-text-primary">{user?.role || "-"}</p>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">Email</p>
+              <p className="mt-0.5 text-sm font-semibold text-[#14142B] [overflow-wrap:anywhere]">
+                {user?.email || "-"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-[#16A34A]">
+              <FiShield className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">Role</p>
+              <p className="mt-0.5 text-sm font-semibold capitalize text-[#14142B]">
+                {user?.role || "-"}
+              </p>
             </div>
           </div>
         </div>
       </Card>
 
       <Card>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-text-primary">Log out</p>
-            <p className="text-sm text-text-secondary">End your current session on this device.</p>
+            <p className="text-sm font-bold text-[#14142B]">Log out</p>
+            <p className="mt-0.5 text-sm text-[#64748B]">End your current session on this device.</p>
           </div>
-          <Button variant="danger" icon={FiLogOut} onClick={() => setConfirmLogout(true)}>
+          <Button
+            variant="danger"
+            icon={FiLogOut}
+            className="shrink-0"
+            onClick={() => setConfirmLogout(true)}
+          >
             Logout
           </Button>
         </div>

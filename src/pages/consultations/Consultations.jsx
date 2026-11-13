@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiEye, FiCalendar, FiX } from "react-icons/fi";
 import consultationService from "../../services/consultations/consultationService";
 import patientService from "../../services/patients/patientService";
 import doctorService from "../../services/doctors/doctorService";
@@ -15,6 +15,7 @@ import {
   ConfirmDialog,
   Input,
   Select,
+  Avatar,
 } from "../../components/ui";
 import { formatDate } from "../../utils/helpers";
 
@@ -133,19 +134,24 @@ export default function Consultations() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="rounded-[20px] border border-[#E2E8F0] bg-white p-4 shadow-[0_8px_24px_rgba(79,70,229,0.08)] sm:p-6">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <SearchInput
           value={search}
           onChange={setSearch}
           placeholder="Search by patient or doctor name"
+          className="flex-1"
         />
-        <Button icon={FiPlus} onClick={() => navigate("/consultations/create")}>
+        <Button
+          icon={FiPlus}
+          onClick={() => navigate("/consultations/create")}
+          className="shrink-0"
+        >
           Schedule Consultation
         </Button>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white px-5 pt-2">
+      <div className="mb-5">
         <Tabs tabs={TABS} active={activeTab} onChange={setActiveTab} />
       </div>
 
@@ -157,12 +163,15 @@ export default function Consultations() {
             key: "patientName",
             header: "Patient",
             render: (r) => (
-              <button
-                className="text-sm font-medium text-primary hover:underline"
-                onClick={() => navigate(`/consultations/${r.id}`)}
-              >
-                {r.patientName}
-              </button>
+              <div className="flex items-center gap-3">
+                <Avatar name={r.patientName} />
+                <button
+                  className="cursor-pointer text-left text-sm font-bold text-[#4F46E5] hover:underline"
+                  onClick={() => navigate(`/consultations/${r.id}`)}
+                >
+                  {r.patientName}
+                </button>
+              </div>
             ),
           },
           { key: "doctorName", header: "Doctor" },
@@ -174,27 +183,33 @@ export default function Consultations() {
             key: "actions",
             header: "Actions",
             render: (row) => (
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  className="text-sm font-medium text-sky-600 hover:underline"
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="actionView"
+                  size="sm"
+                  icon={FiEye}
                   onClick={() => navigate(`/consultations/${row.id}`)}
                 >
                   View Details
-                </button>
+                </Button>
                 {row.status === "Scheduled" && (
                   <>
-                    <button
-                      className="text-sm font-medium text-amber-600 hover:underline"
+                    <Button
+                      variant="actionEdit"
+                      size="sm"
+                      icon={FiCalendar}
                       onClick={() => openReschedule(row)}
                     >
                       Reschedule
-                    </button>
-                    <button
-                      className="text-sm font-medium text-danger hover:underline"
+                    </Button>
+                    <Button
+                      variant="actionDelete"
+                      size="sm"
+                      icon={FiX}
                       onClick={() => setCancelTarget(row)}
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </>
                 )}
               </div>
@@ -226,7 +241,7 @@ export default function Consultations() {
             onSubmit={handleRescheduleSubmit}
             className="space-y-4"
           >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Input
                 label="Date"
                 type="date"

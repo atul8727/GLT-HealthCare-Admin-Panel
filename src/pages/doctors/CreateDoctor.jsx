@@ -35,10 +35,10 @@ export default function CreateDoctor() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-3xl">
       <Card title="Add Doctor" icon={FiUserPlus}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Input label="Doctor Name" required value={form.name} onChange={handleChange("name")} />
             <Input
               label="Specialization"
@@ -63,7 +63,7 @@ export default function CreateDoctor() {
               onChange={handleChange("password")}
             />
           </div>
-          <div className="flex justify-end pt-2">
+          <div className="flex justify-end border-t border-[#E2E8F0] pt-5">
             <Button type="submit" loading={saving}>
               Create Doctor
             </Button>
